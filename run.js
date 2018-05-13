@@ -14,8 +14,20 @@ cc('timer__start_C: ~0');
 var City;
 City = {
     name:'index',
+    age:0,
     xoxox:'xoxox',
     goods:[],
+    on_breakfast:['GatherResources'],
+    on_dinner:['TradeOffers'],
+    on_party:['CityWelcome'],
+    center:{
+        market: {
+            name:'rooter',
+            lvl:1,
+            traders:['seobot1']
+        }
+    },
+    Welcome: function(){ cc('City welcome!') },    
     map:true
 };
 
@@ -45,12 +57,28 @@ Landmarks = [
 // ---------------------------------------------- UNIVERSE
 
 var World;
-World = {
+World = {   
     age:0,
     Welcome:
         function() {
             this.age++;
             cc('# world created');
+            Planeta.Welcome();
+            Industry.Welcome();
+        }
+    ,
+    GoodNight: // end turn
+        function() {
+            //
+        }
+    ,
+    Have_a_Nice_Day: // Breakfast/Dinner/Party
+        function() {
+            City.age++;
+            cc('# ---------------------- Have a Nice Day, '+City.name+' #'+City.age);
+            for ( var i in City.on_breakfast )     Industry.DoJob(City.on_breakfast[i]);
+            for ( var i in City.on_dinner )        Industry.DoJob(City.on_dinner[i]);
+            for ( var i in City.on_party )         Industry.DoJob(City.on_party[i]);
         }
 };
 
@@ -80,6 +108,7 @@ Planeta = {
             ccc([
                 'Name:'+City.name,
                 'Resources:',City.goods,
+                'Buildings:',Industry.get_list_of_buldings(),
                 'DO_display.city'
             ]);
         }
@@ -110,12 +139,22 @@ Planeta = {
 var Industry; // prince: world.update
 Industry = {
     age:0,
-    Welcome:
-        function() {
-            this.age++;
-            cc('# ---------------------- Industry works #'+this.age);
-            this.gatherResources();
-            this.supportUI();
+    DoJob:
+        function(job) {
+            var Industry = this;
+            switch(job) {
+                case 'CityWelcome':
+                    City.Welcome();
+                    break;
+                case 'GatherResources':
+                    Industry.gatherResources();
+                    break;
+                case 'TradeOffers':
+                    Industry.tradeOffers();
+                    break;
+                default:
+                    cc('-- I cant do '+job);
+            }
         }
     ,
     gatherResources:
@@ -132,18 +171,103 @@ Industry = {
             City.goods = fresh_goods;
         }
     ,
-    supportUI:
+    tradeOffers:
+        function() {
+            var traders = City.center.market.traders;
+            ccc([traders, 'DO_contacts.trade']);
+            for ( i in traders )
+                cc('-- Trade offer with '+traders[i]);
+            
+        }
+    ,
+    get_list_of_buldings:
+        function() {
+            var list = [];
+            for ( i in City.center )
+                list.push(i);
+            return list;
+        }
+    ,
+    /*supportUI:
         function() {
             Planeta.skyface();         
         }
+    ,*/
+    Welcome:
+        function() {
+            cc('# industry works');
+        }
 };
 
+var Contact;
+Contact = {
+    Player: {
+        WhatNext:
+            function() {
+                //if ( Contact.Autoplayer.active ) Contact.Autoplayer.WhatNext();
+                cc('player...');
+                cc(Story.chapter);
+            }
+        ,
+        active:true
+    },
+    Autoplayer: {
+        WhatNext:
+            function() {
+                cc('autoplayer...');
+                Story.NextChapter();
+            }
+        ,
+        active:true
+    },
+    DoCall:
+        function(contact) {
+            return contact.active;
+        }
+};
+
+var Story;
+Story = {
+    chapter:0,
+    Begin:
+        function() {
+            cc('# ---------------------- Read the Story #'+Story.chapter);
+            World.Welcome();
+            //Contact.Player.WhatNext();
+            Story.NextChapter();
+        }
+    ,
+    NextChapter:
+        function() {
+            Story.chapter++;
+            Story.Play();
+        }
+    ,
+    Play:
+        function() {
+            var id = Story.chapter;
+            switch(id) {
+                case 1:
+                    ccc(['---------------------- Story message '+id,'DO_story.message.C'+id]);
+                    World.Have_a_Nice_Day();
+                    Contact.Player.WhatNext();
+                    break;
+                case 0:
+                default:
+                    Story.Begin();
+            }
+        }
+};
 
 // ---------------------------------------------- BEGIN
 
-World.Welcome();
-Industry.Welcome();
-Planeta.Welcome();
+//World.Welcome();
+//Industry.Welcome();
+//Planeta.Welcome();
+//City.center.market.Welcome();
+//World.Have_a_Nice_Day(City);
+
+Story.Begin();
 
 // ---------------------------------------------- END
 console.timeEnd('timer__start_C');
