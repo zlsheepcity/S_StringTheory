@@ -9,8 +9,133 @@ ccc = function(log) {
 cc('timer__start_C: ~0');
 
 
+// ---------------------------------------------- CREATION TOOLS
+
+function WorldCity(dna) {
+    this.name = dna.name ? dna.name : 'index';
+    this.map = dna.map ? true : false ;
+    this.age = 0;
+    this.dna = dna;
+    this.resources = [];
+    this.center = {
+        rooter: {
+            lvl:1,
+            contacts:['seobot1']
+        }
+    };
+}
+function WorldResource(dna) {
+    this.name = dna.name ? dna.name : 'content';
+    this.lvl = dna.lvl ? dna.lvl : 0;
+    this.map = dna.map ? true : false ;
+}
+function WorldLandmark(dna) {
+    this.name = dna.name ? dna.name : 'valley';
+    this.lvl = dna.lvl ? dna.lvl : 0;
+    this.map = dna.map ? true : false ;
+}
+function PrincePlanet(world) {
+    this.world = world;
+    this.show = function(options){
+        cc('# Its Show Time ------------');
+        this.city();
+        this.resources();
+        this.landmarks();
+        cc('# ------------ Show Ends');
+    };
+    this.city = function() {
+        ccc([this.world.city,'DO_display.city']);
+    };
+    this.resources = function() {
+        ccc([this.world.resources,'DO_display.resources']);
+    };
+    this.landmarks = function() {
+        ccc([this.world.landmarks,'DO_display.landmarks']);
+    };
+}
+function PrinceIndustry(world) {
+    this.world = world;
+    this.ApplyChromosome = function(chromosome) {
+        var injection;
+        injection =
+            chromosome && chromosome.resources
+            ? chromosome.resources
+            : false ;
+        if ( injection ) this.do_inject(this.world.resources, injection);
+    };
+    this.do_inject = function(patient,cure) {
+        var i, single_action_key, single_action_value;
+        for ( var i in cure )
+            cc('-- inject '+i);
+    }
+}
+function KingWorld(chromosome) {
+    this.age = 0;
+    this.chromosome = chromosome;
+
+    // --------- Planet — prince of visualization
+
+    this.planet = new PrincePlanet(this);
+
+    // --------- City
+
+    var cityDNA =
+        this.chromosome && this.chromosome.city
+        ? this.chromosome.city
+        : false ;
+    this.city = new WorldCity( cityDNA ? cityDNA : false );
+
+    // --------- Resources
+
+    this.resources = {};
+    for ( i in Galactica.resources )
+        if ( Galactica.resources[i].name )
+            this.resources[Galactica.resources[i].name] =
+                new WorldResource( Galactica.resources[i] );
+
+    // --------- Landmarks
+
+    this.landmarks = {};
+    for ( i in Galactica.landmarks )
+        if ( Galactica.landmarks[i].name )
+            this.landmarks[Galactica.landmarks[i].name] =
+                new WorldLandmark( Galactica.landmarks[i] );
+
+    // --------- Industry — prince of logic
+
+    this.industry = new PrinceIndustry(this);
+
+    // --------- Feedback
+
+    cc('# New World created');
+    cc(this);
+}
+
 // ---------------------------------------------- DATA
 
+var Galactica;
+Galactica = {
+    resources: [
+        { name:'content' },
+        { name:'html_tag' }
+    ],
+    landmarks: [
+        { name:'voronsnest' }
+    ],
+    chromosome:
+    {
+        city:{name:'index'},
+        resources:{
+            content:{lvl:1,map:true},
+            html_tag:{map:true},
+        },
+        landmarks:{
+            voronsnest:{map:true}
+        }
+    }
+};
+
+/*
 var City;
 City = {
     name:'index',
@@ -30,7 +155,8 @@ City = {
     Welcome: function(){ cc('City welcome!') },    
     map:true
 };
-
+*/
+/*
 var Resources;
 Resources = [
     {
@@ -53,11 +179,13 @@ Landmarks = [
         map:true
     }
 ];
+*/
 
 // ---------------------------------------------- UNIVERSE
 
+/*
 var World;
-World = {   
+World = {
     age:0,
     Welcome:
         function() {
@@ -81,7 +209,8 @@ World = {
             for ( var i in City.on_party )         Industry.DoJob(City.on_party[i]);
         }
 };
-
+*/
+/*
 var Planeta; // prince: world.display
 Planeta = {
     age:0,
@@ -135,7 +264,9 @@ Planeta = {
                     ]);
         } 
 };
+*/
 
+/*
 var Industry; // prince: world.update
 Industry = {
     age:0,
@@ -188,17 +319,14 @@ Industry = {
             return list;
         }
     ,
-    /*supportUI:
-        function() {
-            Planeta.skyface();         
-        }
-    ,*/
     Welcome:
         function() {
             cc('# industry works');
         }
 };
+*/
 
+/*
 var Contact;
 Contact = {
     Player: {
@@ -225,7 +353,9 @@ Contact = {
             return contact.active;
         }
 };
+*/
 
+/*
 var Story;
 Story = {
     chapter:0,
@@ -258,16 +388,35 @@ Story = {
             }
         }
 };
+*/
+
 
 // ---------------------------------------------- BEGIN
+
+var World = new KingWorld();
+var Planet = World.planet;
+var Industry = World.industry;
+Planet.show();
+Industry.ApplyChromosome(Galactica.chromosome);
+cc(World);
+
+
+
+// ---------------------------------------------- END
+console.timeEnd('timer__start_C');
+
 
 //World.Welcome();
 //Industry.Welcome();
 //Planeta.Welcome();
 //City.center.market.Welcome();
 //World.Have_a_Nice_Day(City);
+//Story.Begin();
+/*
+var zz = new KingWorld();
+var zc = zz.city;
+cc(zz);
+cc(zc);
+for ( i in zz.resources ) cc(zz.resources[i]);
+*/
 
-Story.Begin();
-
-// ---------------------------------------------- END
-console.timeEnd('timer__start_C');
