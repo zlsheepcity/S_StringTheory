@@ -6,13 +6,13 @@ ccc = function(log) {
     for ( row in log ) cc(log[row]);
     console.groupEnd();
 };
-cc('timer__start_C: ~0');
+cc('timer__start_C: ~0ms');
 
 
 // ---------------------------------------------- CREATION TOOLS
 
 function WorldCity(dna) {
-    this.name = dna.name ? dna.name : 'index';
+    this.name = dna.name ? dna.name : 'index0';
     this.map = dna.map ? true : false ;
     this.age = 0;
     this.dna = dna;
@@ -20,9 +20,23 @@ function WorldCity(dna) {
     this.center = {
         rooter: {
             lvl:1,
-            contacts:['seobot1']
+            contacts: dna.contacts ? dna.contacts : ['seobot0']
         }
     };
+    this.gov = {name:'anarchy'};
+    this.AddResources = function(resource) {
+        this.resources = Industry.make_array_summ(this.resources, resource);
+    };
+    this.ClearResources = function() {
+        this.resources = [];
+    };
+    this.AddContacts = function(contacts) {
+        this.center.rooter.contacts = Industry.make_array_summ(this.contacts, contacts);
+    };
+    this.hasResource = function(resource) {
+        return this.resources && this.resources.indexOf(resource) > -1;
+    };
+    cc('# City was born '+this.name);
 }
 function WorldResource(dna) {
     this.name = dna.name ? dna.name : 'content';
@@ -33,6 +47,11 @@ function WorldLandmark(dna) {
     this.name = dna.name ? dna.name : 'valley';
     this.lvl = dna.lvl ? dna.lvl : 0;
     this.map = dna.map ? true : false ;
+}
+function WorldContact(dna) {
+    this.name = dna.name ? dna.name : 'seobot0';
+    this.lvl = dna.lvl ? dna.lvl : 0;
+    this.homeland = dna.homeland ? dna.homeland : false ;
 }
 function PrincePlanet(world) {
     this.world = world;
@@ -52,25 +71,80 @@ function PrincePlanet(world) {
     this.landmarks = function() {
         ccc([this.world.landmarks,'DO_display.landmarks']);
     };
+    this.Party = function(event) {
+        ccc(['No party!', 'DO_display.update.noparty']);
+    };
 }
 function PrinceIndustry(world) {
     this.world = world;
     this.ApplyChromosome = function(chromosome) {
+        cc('# ApplyChromosome');
+        cc(chromosome);
         var injection;
         injection =
             chromosome && chromosome.resources
             ? chromosome.resources
             : false ;
-        if ( injection ) this.do_inject(this.world.resources, injection);
+        if ( injection ) this.world.resources = this.make_injection(this.world.resources, injection);
+        injection =
+            chromosome && chromosome.landmarks
+            ? chromosome.landmarks
+            : false ;
+        if ( injection ) this.world.landmarks = this.make_injection(this.world.landmarks, injection);
+        if ( chromosome.turn ) this.world.turn = chromosome.turn;
+        if ( chromosome.name ) this.world.name = chromosome.name;
+        // Evolve
+        this.world.city = new WorldCity( chromosome.city );
     };
-    this.do_inject = function(patient,cure) {
-        var i, single_action_key, single_action_value;
-        for ( var i in cure )
-            cc('-- inject '+i);
+    this.GatherResources = function() {
+        cc('# GatherResources');
+        var id, gathered_resources = [];
+        var world = this.world;
+        for ( id in world.resources )
+            if ( world.resources[id].map && world.resources[id].lvl )
+                gathered_resources.push(id);
+        cc(gathered_resources);
+        world.city.ClearResources();
+        world.city.AddResources(gathered_resources);
+    };
+    this.GoodMorning = function() {
+        var world = this.world;
+        world.turn++;
+        cc('# GoodMorning, day#'+world.turn);
+        // Breakfast
+        world.industry.GatherResources();
+        // Dinner
+        world.industry.ContactAll(world);
+        // Party
+        world.planet.Party('newday');
+    };
+    this.ContactAll = function() {
+        var world = this.world;
+        Story.Call('seobot1',world);
+    };
+    this.make_injection = function(patient,cure) {
+        var id, i, single_action_key, single_action_value;
+        for ( id in cure ) // each object
+            if ( patient[id] )
+                for ( i in cure[id] ) { // each property
+                    cc('-- inject '+id+'.'+i);
+                    patient[id][i] = cure[id][i];
+                }
+        return patient;
+    };
+    this.make_array_summ = function (array1, array2) {
+        if (!array1) array1 = [];
+        if (array2.length)
+            array1 = array1.concat(array2);
+        else 
+            array1.push(array2);
+        return array1;
     }
 }
 function KingWorld(chromosome) {
     this.age = 0;
+    this.turn = chromosome && chromosome.turn ? chromosome.turn : 0;
+    this.name = chromosome && chromosome.name ? chromosome.name : 'KingWorld';
     this.chromosome = chromosome;
 
     // --------- Planet — prince of visualization
@@ -83,7 +157,7 @@ function KingWorld(chromosome) {
         this.chromosome && this.chromosome.city
         ? this.chromosome.city
         : false ;
-    this.city = new WorldCity( cityDNA ? cityDNA : false );
+    this.city = new WorldCity( cityDNA );
 
     // --------- Resources
 
@@ -100,15 +174,38 @@ function KingWorld(chromosome) {
         if ( Galactica.landmarks[i].name )
             this.landmarks[Galactica.landmarks[i].name] =
                 new WorldLandmark( Galactica.landmarks[i] );
+                
+    // --------- Contacts
+
+    this.contacts = {};
+    for ( i in Galactica.contacts )
+        if ( Galactica.contacts[i].name )
+            this.contacts[Galactica.contacts[i].name] =
+                new WorldContact( Galactica.contacts[i] );
 
     // --------- Industry — prince of logic
 
     this.industry = new PrinceIndustry(this);
+    
+    // --------- Functions
+
+    this.Welcome = function() {
+        this.age++;
+        cc('# Welcome to the World ------------');
+        if ( !Galactica ) cc('--- Galactica is missed. No Galactica — no World.');
+        if ( !this.chromosome ) this.chromosome = Galactica.chromosome;
+        this.industry.ApplyChromosome(Galactica.chromosome);
+        this.industry.GatherResources();
+        cc('# ------------ Welcome!');
+    };
+    this.NextTurn = function() {
+        this.industry.GoodMorning();
+        return true;
+    };
 
     // --------- Feedback
 
     cc('# New World created');
-    cc(this);
 }
 
 // ---------------------------------------------- DATA
@@ -122,16 +219,47 @@ Galactica = {
     landmarks: [
         { name:'voronsnest' }
     ],
+    contacts: [
+        { name:'admin', lvl:1, homeland:'voronsnest' },
+        { name:'seobot1', lvl:1 }
+    ],
     chromosome:
     {
-        city:{name:'index'},
+        city:{
+            name:'index',
+            contacts:['seobot1']
+        },
         resources:{
             content:{lvl:1,map:true},
             html_tag:{map:true},
         },
         landmarks:{
             voronsnest:{map:true}
+        },
+        turn: 0,
+        name: 'Galactica.KingWorld'
+    }
+};
+
+var Story;
+Story = {
+    Call: function(contact, world) {
+        cc('Calling '+contact+'...');
+        switch (contact) {
+            case 'seobot1':
+                // trade for content
+                if ( world.city.hasResource('content') )
+                    cc('-- content for seobot');
+                break;
         }
+    },
+    Tasks: {
+        'seobot1': {
+            'grab_content': { active:true, status:0 }
+        },
+        'admin': {
+            'html_quiz': { active:false, status:0 }
+        },
     }
 };
 
@@ -396,15 +524,16 @@ Story = {
 var World = new KingWorld();
 var Planet = World.planet;
 var Industry = World.industry;
+World.Welcome();
 Planet.show();
-Industry.ApplyChromosome(Galactica.chromosome);
-cc(World);
 
-
+World.NextTurn();
+World.NextTurn();
 
 // ---------------------------------------------- END
 console.timeEnd('timer__start_C');
 
+cc(World);
 
 //World.Welcome();
 //Industry.Welcome();
