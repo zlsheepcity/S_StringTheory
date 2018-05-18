@@ -1,16 +1,3 @@
-console.time('timer__start_C');
-var cc, ccc;
-cc = function(log) { console.log(log); };
-ccc = function(log) { 
-    console.group('o:'+log[log.length-1]);
-    for ( row in log ) cc(log[row]);
-    console.groupEnd();
-};
-cc('timer__start_C: ~0ms');
-
-
-// ---------------------------------------------- CREATION TOOLS
-
 function WorldCity(dna) {
     this.name = dna.name ? dna.name : 'index0';
     this.map = dna.map ? true : false ;
@@ -104,7 +91,7 @@ function PrinceIndustry(world) {
         if ( chromosome.turn ) this.world.turn = chromosome.turn;
         if ( chromosome.name ) this.world.name = chromosome.name;
         // Evolve
-        this.world.city = new WorldCity( chromosome.city );
+        //this.world.city = new WorldCity( chromosome.city );
     };
     this.GatherResources = function() {
         cc('# GatherResources');
@@ -160,15 +147,22 @@ function PrinceIndustry(world) {
     }
 }
 function KingWorld(chromosome) {
+
+    // --------- Required
+
+    if ( !Galactica )
+        cc('--- Galactica is missed. No Galactica — no World.');
+    else if (
+           !Galactica.resources
+        || !Galactica.landmarks
+        || !Galactica.contacts
+    )   cc('--- Galactica is broken.');
+
     this.age = 0;
     this.turn = chromosome && chromosome.turn ? chromosome.turn : 0;
     this.name = chromosome && chromosome.name ? chromosome.name : 'KingWorld';
     this.wifi = 0;
     this.chromosome = chromosome;
-
-    // --------- Planet — prince of visualization
-
-    this.planet = new PrincePlanet(this);
 
     // --------- City
 
@@ -178,6 +172,14 @@ function KingWorld(chromosome) {
         : false ;
     this.city = new WorldCity( cityDNA );
 
+    // --------- Landmarks
+
+    this.landmarks = {};
+    for ( i in Galactica.landmarks )
+        if ( Galactica.landmarks[i].name )
+            this.landmarks[Galactica.landmarks[i].name] =
+                new WorldLandmark( Galactica.landmarks[i] );
+
     // --------- Resources
 
     this.resources = {};
@@ -186,14 +188,6 @@ function KingWorld(chromosome) {
             this.resources[Galactica.resources[i].name] =
                 new WorldResource( Galactica.resources[i] );
 
-    // --------- Landmarks
-
-    this.landmarks = {};
-    for ( i in Galactica.landmarks )
-        if ( Galactica.landmarks[i].name )
-            this.landmarks[Galactica.landmarks[i].name] =
-                new WorldLandmark( Galactica.landmarks[i] );
-                
     // --------- Contacts
 
     this.contacts = {};
@@ -202,46 +196,28 @@ function KingWorld(chromosome) {
             this.contacts[Galactica.contacts[i].name] =
                 new WorldContact( Galactica.contacts[i] );
 
+    // --------- Planet — prince of visualization
+
+    this.planet = new PrincePlanet(this);
+
     // --------- Industry — prince of logic
 
     this.industry = new PrinceIndustry(this);
+    this.industry.ApplyChromosome(this.chromosome);
+
+    // --------- Feedback
+
+    cc('# New World created');
     
     // --------- Functions
 
     this.Welcome = function() {
         this.age++;
-        cc('# Welcome to the World ------------');
-        if ( !Galactica ) cc('--- Galactica is missed. No Galactica — no World.');
-        if ( !this.chromosome ) this.chromosome = Galactica.chromosome;
-        this.industry.ApplyChromosome(Galactica.chromosome);
-        this.industry.GatherResources();
-        cc('# ------------ Welcome!');
+        cc('# Welcome to the World');
     };
     this.NextTurn = function() {
         this.industry.GoodMorning();
         return true;
     };
-
-    // --------- Feedback
-
-    cc('# New World created');
 }
 
-// ---------------------------------------------- BEGIN
-
-var World = new KingWorld();
-var Planet = World.planet;
-var Industry = World.industry;
-World.Welcome();
-Planet.show();
-Story.Play();
-
-//World.NextTurn();
-//World.resources['html_tag'].Grab();
-//World.contacts.scout.lvl++;
-//World.NextTurn();
-
-// ---------------------------------------------- END
-console.timeEnd('timer__start_C');
-
-cc(World);
