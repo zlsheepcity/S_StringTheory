@@ -26,11 +26,18 @@
 
 <!-- ## CSS -->
 
+<!-- art --><link href="art/planet_mapico.css" rel="stylesheet"  media="all" /><!-- / -->
 <!-- app --><link href="app/css/components.css" rel="stylesheet"  media="all" /><!-- / -->
 
 <!-- ## JS -->
 
+<!-- lib --><script src="app/vendor/ki/ki.js"></script><!-- / -->
+<!-- lib --><script src="app/vendor/svg4everybody/svg4everybody.legacy.js"></script><!-- / -->
+<script>svg4everybody();</script>
+
+
 <!-- app --><script src="app/js/Galactica.js"></script><!-- / -->
+<!-- app --><script src="app/js/Planet.js"></script><!-- / -->
 <!-- app --><script src="app/js/World.js"></script><!-- / -->
 <!-- app --><script src="app/js/Story.js"></script><!-- / -->
 <!-- app --><script src="app/js/run.js"></script><!-- / -->
@@ -46,15 +53,40 @@
 
 
 
-<main class="elMain cMain">
+
 <!-- =================================================== ʕ⊙ᴥ⊙ʔ  -->
 <!-- =================================================== [CONTENT START] -->
 
+<article class="planetmap">
+<section class="mapibox">
+    <div class="mapibox__mama PlanetFor--mapico">
 
+        <div class="PlanetFor--mapico-landmarks"></div>
+        <div class="PlanetFor--mapico-resources"></div>
+        <div class="PlanetFor--mapico-buildings"></div>
+        <div class="PlanetFor--mapico-contacts"></div>
+
+        <!-- type:xlink --
+        <figure class="mapico mapico--index">
+            <svg role="img" title="CodePen">
+                <use xlink:href="art/planet_mapico.svg#index"/>
+            </svg>
+        </figure>
+        <!-- -->
+
+        <!-- type:img --
+        <figure class="mapico mapico--index">
+            <img src="art/planet/index.svg" alt="">
+        </figure>
+        <!-- -->
+
+    </div>
+</section>
+</article>
 
 <!-- =================================================== [CONTENT END] -->
 <!-- =================================================== ʕ⊙ᴥ⊙ʔ  -->
-</main>
+
 
 
 

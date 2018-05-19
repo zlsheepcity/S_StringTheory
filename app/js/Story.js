@@ -45,7 +45,7 @@ Story = {
     Play: function(){
         World.NextTurn();
     },
-    isNonStop: true,
+    isNonStop: false,
     Autoplay: function(){
         if ( ! this.isNonStop ) return false;
         switch ( World.turn ) {

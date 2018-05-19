@@ -45,33 +45,6 @@ function WorldContact(dna) {
     this.homeland = dna.homeland ? dna.homeland : false ;
     this.turn_of_last_visit = 0;
 }
-function PrincePlanet(world) {
-    this.world = world;
-    this.show = function(options){
-        cc('# Its Show Time ------------');
-        this.city();
-        this.resources();
-        this.landmarks();
-        cc('# ------------ Show Ends');
-    };
-    this.city = function() {
-        ccc([this.world.city,'DO_display.city']);
-    };
-    this.resources = function() {
-        ccc([this.world.resources,'DO_display.resources']);
-    };
-    this.landmarks = function() {
-        ccc([this.world.landmarks,'DO_display.landmarks']);
-    };
-    this.Party = function(event) {
-        ccc(['No party!', 'DO_display.update.noparty']);
-    };
-    this.SupportUI = function(){
-        cc('# Currect State ------------');
-        cc('Wifi:'+this.world.wifi);
-        cc('# ------------ No more current');
-    };
-}
 function PrinceIndustry(world) {
     this.world = world;
     this.ApplyChromosome = function(chromosome) {
@@ -146,6 +119,7 @@ function PrinceIndustry(world) {
         return array1;
     }
 }
+
 function KingWorld(chromosome) {
 
     // --------- Required
@@ -212,8 +186,9 @@ function KingWorld(chromosome) {
     // --------- Functions
 
     this.Welcome = function() {
-        this.age++;
         cc('# Welcome to the World');
+        this.age++;
+        this.planet.Welcome();
     };
     this.NextTurn = function() {
         this.industry.GoodMorning();
