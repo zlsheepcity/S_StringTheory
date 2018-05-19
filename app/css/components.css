@@ -5,8 +5,8 @@ html {
 body {
     background-color:wheat;
     background-position: 50% 50%;
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-image:url(../../art/planet_preview.png);
+    background-image:url(../../art/Planet_preview.svg);
 }
   
