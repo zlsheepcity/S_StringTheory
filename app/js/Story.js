@@ -3,16 +3,38 @@
 var Story;
 Story = {
     Call: function(contact, world) {
-        cc('Calling '+contact+'...');
+        cc('- Story.Call '+contact+'...');
         var current_status =
             contact && world.contacts[contact]
             ? world.contacts[contact]
             : {};
         switch (contact) {
 
+            case 'nothing':
+            
+                /* nothing */
+                if (
+                    true
+                ) {
+                    //nothing
+                }
+                /* */
+            
+            break;
+            case 'kanban':
+            
+                /* grab content */
+                if (
+                    !world.city.hasResource('content')
+                ) {
+                    cc('-- Quest: grab content');
+                }
+                /* */
+            
+            break;
             case 'seobot1':
 
-                // content for seobot
+                /* content for seobot */
                 if (
                     world.city.hasResource('content')
                     && world.contacts.seobot1.turn_of_last_visit != world.turn 
@@ -21,24 +43,28 @@ Story = {
                     world.contacts.seobot1.turn_of_last_visit = world.turn;
                     world.industry.ConnectWifi(1);
                 }
-                break;
-
+                /* */
+                
+                
+            break;
             case 'admin':
 
-                // html quiz
+                /* html quiz */
                 if ( world.city.hasResource('html_tag') )
                     cc('-- html for admin');
-                break;
+                /* */
                 
+            break;
             case 'scout':
 
                 // html_tag resource
                 if ( 
                     world.resources.html_tag.lvl < 1
                 ) {
-                    cc('-- html_tag resource');
+                    //cc('-- no html_tag resource');
                 } 
-                break;
+                
+            break;
 
         }
     },
@@ -50,16 +76,16 @@ Story = {
         if ( ! this.isNonStop ) return false;
         switch ( World.turn ) {
             case 1:
-                ccc(['Skip','DO_autoplay.T'+World.turn]);
+                ccc(['Skip','Story.Autoplay.T'+World.turn]);
                 this.Play();
                 break;
             case 2:
-                ccc(['Grab html_tag','DO_autoplay.T'+World.turn]);
-                World.resources['html_tag'].Grab();
+                ccc(['Grab content','Story.Autoplay.T'+World.turn]);
+                World.resources['content'].Grab();
                 this.Play();
                 break;
             default:
-                ccc(['Autoplay finished','DO_autoplay.T'+World.turn]);
+                ccc(['Autoplay finished','Story.Autoplay.T'+World.turn]);
                 break;
         }
     },

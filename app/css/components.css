@@ -3,29 +3,34 @@ v2018.5.19
 */
 /* ------------------------------------------------ html tags */
 html {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 *, *::before, *::after {
-  box-sizing: inherit; }
+  box-sizing: inherit;
+}
 
 html {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-size: 16px; }
+  font-size: 16px;
+}
 
 body {
   background-color: wheat;
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+}
 
 figure {
   display: block;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+}
 
 /* ------------------------------------------------ mapico */
 .planetmap {
@@ -34,9 +39,11 @@ figure {
   height: 100%;
   justify-content: center;
   align-items: center;
-  align-content: center; }
-  .planetmap .mapibox {
-    flex-grow: 1; }
+  align-content: center;
+}
+.planetmap .mapibox {
+  flex-grow: 1;
+}
 
 .mapibox {
   display: block;
@@ -44,29 +51,55 @@ figure {
   background-position: 0% 0%;
   background-size: contain;
   background-repeat: no-repeat;
-  background-image: url(../../art/Planet_preview.svg);
+  background-image: url(../../art/Planet_bgr.svg);
   max-width: 125vh;
   max-height: 100vh;
   margin: 1rem;
-  overflow: hidden; }
-  .mapibox .mapibox__mama {
-    position: relative;
-    display: block;
-    padding-top: 100%; }
+  overflow: hidden;
+}
+.mapibox .mapibox__mama {
+  position: relative;
+  display: block;
+  padding-top: 100%;
+}
 
 .mapico {
   position: absolute;
+  display: block;
+}
+.mapico .mapico_img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.mapico .mapico_marker {
+  position: absolute;
   z-index: 1;
-  display: block; }
-  .mapico img, .mapico svg {
-    display: block;
-    width: 100%;
-    height: 100%; }
-  .mapico.is-hidden {
-    opacity: 0; }
-  .mapico.from-contacts:hover {
-    z-index: 9; }
-    .mapico.from-contacts:hover img, .mapico.from-contacts:hover svg {
-      transform: scale(1.2); }
-  .mapico.from-landmarks img, .mapico.from-landmarks svg {
-    opacity: 0.25; }
+  display: none;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1rem;
+  width: 2rem;
+  height: 2rem;
+  background-color: firebrick;
+  border-radius: 50%;
+}
+.mapico .mapico_marker.is-active {
+  display: block;
+}
+.mapico:hover .mapico_marker.animated {
+  animation-duration: 0;
+  animation-name: none;
+}
+.mapico.is-hidden .mapico_img {
+  display: none;
+}
+.mapico.from-contacts:hover {
+  z-index: 9;
+}
+.mapico.from-contacts:hover .mapico_img {
+  transform: scale(1.2);
+}
+.mapico.from-landmarks .mapico_img {
+  opacity: 0.25;
+}

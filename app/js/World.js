@@ -5,10 +5,28 @@ function WorldCity(dna) {
     this.dna = dna;
     this.resources = [];
     this.center = {
-        rooter: {
+        roof: dna.roof ? dna.roof : {
+            name:'index',
             lvl:1,
+            map:true,
+        },
+        kanban: dna.kanban ? dna.kanban : {
+            name:'kanban',
+            lvl:1,
+            map:true,
+        },
+        rooter: dna.rooter ? dna.rooter : {
+            name:'rooter',
+            lvl:1,
+            map: true,
             contacts: dna.contacts ? dna.contacts : ['seobot0']
+        },
+        kde: dna.kde ? dna.kde : {
+            name:'market',
+            lvl:1,
+            map:true,
         }
+        
     };
     this.gov = {name:'anarchy'};
     this.AddResources = function(resource) {
@@ -47,8 +65,14 @@ function WorldContact(dna) {
 }
 function PrinceIndustry(world) {
     this.world = world;
+    this.Welcome = function() {
+        cc('# Welcome Industry!');
+        cc(this);
+        this.world.planet.show();
+        //this.world.NeedsYou();
+    }
     this.ApplyChromosome = function(chromosome) {
-        cc('# ApplyChromosome');
+        cc('# ApplyChromosome:');
         cc(chromosome);
         var injection;
         injection =
@@ -67,29 +91,33 @@ function PrinceIndustry(world) {
         //this.world.city = new WorldCity( chromosome.city );
     };
     this.GatherResources = function() {
-        cc('# GatherResources');
         var id, gathered_resources = [];
         var world = this.world;
         for ( id in world.resources )
             if ( world.resources[id].map && world.resources[id].lvl )
                 gathered_resources.push(id);
-        cc(gathered_resources);
+        ccc([gathered_resources,'Industry.GatherResources']);
         world.city.ClearResources();
         world.city.AddResources(gathered_resources);
+
     };
     this.GoodMorning = function() {
         var world = this.world;
         world.turn++;
-        cc('# GoodMorning, day#'+world.turn);
-        // Breakfast
+        ccc(['Day#'+world.turn,world,'Industry.GoodMorning']);
+        cc('# Breakfast');
         world.industry.ContactAll(world);
         world.industry.GatherResources();
-        // Dinner
+        cc('# Dinner');
         world.industry.ContactAll(world);
-        // Party
-        world.planet.Party('newday');
+        cc('# Party');
+        world.planet.Party('GoodEvening');
         world.planet.SupportUI();
-        if ( Story && Story.isNonStop ) Story.Autoplay();
+        this.world.NeedsYou();
+    };
+    this.PlanetCall = function(dialog) {
+        ccc([dialog,'Industry.PlanetCall']);
+        this.world.NextTurn();
     };
     this.ContactAll = function() {
         var world = this.world;
@@ -123,20 +151,36 @@ function PrinceIndustry(world) {
 function KingWorld(chromosome) {
 
     // --------- Required
+    
+    var required_messages = [];
 
-    if ( !Galactica )
-        cc('--- Galactica is missed. No Galactica — no World.');
+    if ( !Galactica ) required_messages.push('--- Galactica is missed. No Galactica — no World.');
     else if (
            !Galactica.resources
         || !Galactica.landmarks
         || !Galactica.contacts
-    )   cc('--- Galactica is broken.');
+    ) required_messages.push('--- Galactica is broken.');
+    if ( !Story ) required_messages.push('--- Story is missed. No Story — no World.');
 
-    this.age = 0;
+    if (required_messages.length) {
+        required_messages.push('World Creation Not Allowed');
+        ccc(required_messages);
+        return false;
+    }
+    
+    // --------- World Basics
+
     this.turn = chromosome && chromosome.turn ? chromosome.turn : 0;
+    this.wifi = chromosome && chromosome.wifi ? chromosome.wifi : 0;
     this.name = chromosome && chromosome.name ? chromosome.name : 'KingWorld';
-    this.wifi = 0;
+    this.mission = chromosome && chromosome.mission ? chromosome.mission : {
+        name:'Grab content',
+        goals: {
+            grab_content: function(){ return false; }
+        },
+    };
     this.chromosome = chromosome;
+    
 
     // --------- City
 
@@ -182,17 +226,24 @@ function KingWorld(chromosome) {
     // --------- Feedback
 
     cc('# New World created');
+    cc(this);
     
     // --------- Functions
 
     this.Welcome = function() {
         cc('# Welcome to the World');
-        this.age++;
+        cc(this);
         this.planet.Welcome();
+        this.industry.Welcome();
     };
     this.NextTurn = function() {
         this.industry.GoodMorning();
         return true;
     };
+    this.NeedsYou = function() {
+        cc('# The World needs You! ....... .... ..... ..... . ........... .........(●ᴥ●)');
+        if ( Story && Story.isNonStop ) Story.Autoplay();
+        // Activate User Input
+    }
 }
 

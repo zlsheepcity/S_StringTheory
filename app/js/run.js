@@ -6,8 +6,8 @@ ccc = function(log) {
     console.groupEnd();
 };
 
-console.time('timer__start_C');
-cc('timer__start_C: ~0ms');
+console.time('time_to_create_the_world');
+cc('time_to_create_the_world: Start...');
 // ---------------------------------------------- CREATION TOOLS
 // ---------------------------------------------- BEGIN
 
@@ -16,19 +16,22 @@ var Planet = World.planet;
 var Industry = World.industry;
 
 // ---------------------------------------------- END
-console.timeEnd('timer__start_C');
+console.timeEnd('time_to_create_the_world');
 
 
 
 $(function () {
     World.Welcome();
-    Story.isNonStop = false;
+    Story.isNonStop = true;
     Story.Play();
+    
+    //Planet.Show_MarkerForMapico('kanban');
+    //Planet.activateMapico('kanban',true);
 
 
     //Planet.insertMapico('index');
     //Planet.insertMapico('kanban');
     //console.log('loaded');
     //console.log(document.querySelector('.mapibox'));
-    cc(World);
+    //cc(World);
 });
