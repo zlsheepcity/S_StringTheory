@@ -1,3 +1,14 @@
+function WorldJob(dna) {
+    this.name = dna && dna.name ? dna.name : 'prokastination';
+    this.cost = {
+        days:       dna && dna.cost && dna.cost.days ? dna.cost.days : 1,
+        sheeps:     dna && dna.cost && dna.cost.sheeps ? dna.cost.sheeps : 0,
+        wifi:       dna && dna.cost && dna.cost.wifi ? dna.cost.wifi : 0,
+        resources:  dna && dna.cost && dna.cost.resources ? dna.cost.resources : false,
+    };
+    this.progress = this.cost.days;
+    this.finish = dna && dna.finish ? dna.finish : false ;
+}
 function KanbanBoard() {
   this.todo = [];  
   this.sprint = [];
@@ -46,6 +57,7 @@ function WorldCity(dna) {
             name:'index',
             lvl:1,
             map:true,
+            joblist:{},
         },
         kanban: dna.kanban ? dna.kanban : {
             name:'kanban',
@@ -68,6 +80,26 @@ function WorldCity(dna) {
             lvl:1,
             map:true,
         }        
+    };
+    this.AddJobToList = function(job){
+        if( !job || !job.name ) return false;
+        this.center.roof.joblist[job.name] = job;
+        return true;
+    };
+    this.DoJob = function(name){
+        cc('... check payment');
+        var job = this.center.roof.joblist[name];
+        if ( !job  || !job.progress ) return false;
+        job.progress--;
+        if ( job.progress < 1 ) {
+            job.finish();
+            this.center.roof.joblist[name] = false;
+        }
+        cc('... do payment');
+    };
+    this.DoJobList = function() {
+        for ( var id in this.center.roof.joblist )
+            this.DoJob(id);
     };
     this.gov = {name:'anarchy'};
     this.AddResources = function(resource) {

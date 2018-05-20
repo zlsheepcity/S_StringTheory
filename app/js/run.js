@@ -14,24 +14,17 @@ cc('time_to_create_the_world: Start...');
 var World = new KingWorld(Galactica.chromosome);
 var Planet = World.planet;
 var Industry = World.industry;
+var City = World.city;
 
 // ---------------------------------------------- END
 console.timeEnd('time_to_create_the_world');
 
 
-
+/* ---------------------------------------------- MAIN RUN */
 $(function () {
     World.Welcome();
     Story.isNonStop = false;
     Story.Play();
     
-    //Planet.Show_MarkerForMapico('kanban');
-    //Planet.activateMapico('kanban',true);
-
-
-    //Planet.insertMapico('index');
-    //Planet.insertMapico('kanban');
-    //console.log('loaded');
-    //console.log(document.querySelector('.mapibox'));
-    //cc(World);
+    ameba_check_city_job();
 });

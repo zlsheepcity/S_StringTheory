@@ -28,6 +28,13 @@ Galactica = {
         { name:'admin', lvl:1, homeland:'router_lakes' },        
         { name:'seobot1', lvl:1 },
     ],
+    jobs: [
+        {
+            name:'grow_content',
+            cost: { days:1 },
+            finish:function(){cc('-- new content');City.AddResources('content');}
+        },
+    ],
     chromosome: {}
 };
 Galactica.chromosome = {
