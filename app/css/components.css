@@ -19,7 +19,7 @@ html {
 }
 
 body {
-  background-color: wheat;
+  background-color: #f5deb2;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -30,6 +30,11 @@ figure {
   display: block;
   margin: 0;
   padding: 0;
+}
+
+/* ------------------------------------------------ plugins */
+.elBody.vex-open {
+  overflow: visible;
 }
 
 /* ------------------------------------------------ mapico */
@@ -47,7 +52,6 @@ figure {
 
 .mapibox {
   display: block;
-  background-color: rgba(246, 204, 126, 0.4);
   background-position: 0% 0%;
   background-size: contain;
   background-repeat: no-repeat;

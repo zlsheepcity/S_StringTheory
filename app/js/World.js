@@ -1,3 +1,40 @@
+function KanbanBoard() {
+  this.todo = [];  
+  this.sprint = [];
+  this.closed = [];
+  // actions
+  this.setTodo = function (name) {
+    this.do_remove_from_memory(name);
+    this.do_add_to_status(name,'todo');
+  };
+  this.setSprint = function (name) {
+    this.do_remove_from_memory(name);
+    this.do_add_to_status(name,'sprint');
+  };
+  this.setClosed = function (name) {
+    this.do_remove_from_memory(name);
+    this.do_add_to_status(name,'closed');
+  };
+  this.do_remove_from_memory = function(name) {
+    if (!name) return false;
+    this.do_remove_from_status(name,'todo');
+    this.do_remove_from_status(name,'sprint');
+    this.do_remove_from_status(name,'closed');
+    return true;
+  };
+  this.do_remove_from_status = function(name,status) {
+      if (!this[status]) return false;
+      var i;
+      for ( i = 0; i < this[status].length; i++ )
+          if ( this[status] == name )  this[status].splice(i,1);
+      return this[status];
+  };
+  this.do_add_to_status = function(name,status) {
+      if (!this[status]) return false;
+      this[status].push(name);
+      return this[status];
+  };
+};
 function WorldCity(dna) {
     this.name = dna.name ? dna.name : 'index0';
     this.map = dna.map ? true : false ;
@@ -14,6 +51,11 @@ function WorldCity(dna) {
             name:'kanban',
             lvl:1,
             map:true,
+            mission: dna.mission ? dna.mission : {
+                name:'becone_an_empire',
+                goals:[],
+            },
+            Board: new KanbanBoard(),
         },
         rooter: dna.rooter ? dna.rooter : {
             name:'rooter',
@@ -25,8 +67,7 @@ function WorldCity(dna) {
             name:'market',
             lvl:1,
             map:true,
-        }
-        
+        }        
     };
     this.gov = {name:'anarchy'};
     this.AddResources = function(resource) {
@@ -60,94 +101,11 @@ function WorldLandmark(dna) {
 function WorldContact(dna) {
     this.name = dna.name ? dna.name : 'seobot0';
     this.lvl = dna.lvl ? dna.lvl : 0;
-    this.homeland = dna.homeland ? dna.homeland : false ;
+    this.has_to_say = false;
+    this.homeland = dna.homeland ? dna.homeland : this.name ;
     this.turn_of_last_visit = 0;
+    this.quests = dna.quests ? dna.quests : {};
 }
-function PrinceIndustry(world) {
-    this.world = world;
-    this.Welcome = function() {
-        cc('# Welcome Industry!');
-        cc(this);
-        this.world.planet.show();
-        //this.world.NeedsYou();
-    }
-    this.ApplyChromosome = function(chromosome) {
-        cc('# ApplyChromosome:');
-        cc(chromosome);
-        var injection;
-        injection =
-            chromosome && chromosome.resources
-            ? chromosome.resources
-            : false ;
-        if ( injection ) this.world.resources = this.make_injection(this.world.resources, injection);
-        injection =
-            chromosome && chromosome.landmarks
-            ? chromosome.landmarks
-            : false ;
-        if ( injection ) this.world.landmarks = this.make_injection(this.world.landmarks, injection);
-        if ( chromosome.turn ) this.world.turn = chromosome.turn;
-        if ( chromosome.name ) this.world.name = chromosome.name;
-        // Evolve
-        //this.world.city = new WorldCity( chromosome.city );
-    };
-    this.GatherResources = function() {
-        var id, gathered_resources = [];
-        var world = this.world;
-        for ( id in world.resources )
-            if ( world.resources[id].map && world.resources[id].lvl )
-                gathered_resources.push(id);
-        ccc([gathered_resources,'Industry.GatherResources']);
-        world.city.ClearResources();
-        world.city.AddResources(gathered_resources);
-
-    };
-    this.GoodMorning = function() {
-        var world = this.world;
-        world.turn++;
-        ccc(['Day#'+world.turn,world,'Industry.GoodMorning']);
-        cc('# Breakfast');
-        world.industry.ContactAll(world);
-        world.industry.GatherResources();
-        cc('# Dinner');
-        world.industry.ContactAll(world);
-        cc('# Party');
-        world.planet.Party('GoodEvening');
-        world.planet.SupportUI();
-        this.world.NeedsYou();
-    };
-    this.PlanetCall = function(dialog) {
-        ccc([dialog,'Industry.PlanetCall']);
-        this.world.NextTurn();
-    };
-    this.ContactAll = function() {
-        var world = this.world;
-        for ( var contact in world.contacts )
-            Story.Call( contact, world );
-    };
-    this.ConnectWifi = function(wifi) {
-        cc('-- more wifi '+wifi);
-        this.world.wifi += 1*wifi;
-    };
-    this.make_injection = function(patient,cure) {
-        var id, i, single_action_key, single_action_value;
-        for ( id in cure ) // each object
-            if ( patient[id] )
-                for ( i in cure[id] ) { // each property
-                    cc('-- inject '+id+'.'+i);
-                    patient[id][i] = cure[id][i];
-                }
-        return patient;
-    };
-    this.make_array_summ = function (array1, array2) {
-        if (!array1) array1 = [];
-        if (array2.length)
-            array1 = array1.concat(array2);
-        else 
-            array1.push(array2);
-        return array1;
-    }
-}
-
 function KingWorld(chromosome) {
 
     // --------- Required

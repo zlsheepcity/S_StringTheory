@@ -16,7 +16,7 @@ html {
     font-size: 16px;
 }
 body {
-    background-color:wheat;
+    background-color: hsla(39, 77%, 83%, 1);
     margin: 0;
     padding: 0;
     width: 100%;
@@ -28,6 +28,11 @@ figure {
     padding: 0;
 }
 
+/* ------------------------------------------------ plugins */
+
+.elBody.vex-open {
+    overflow:visible;
+}
 
 /* ------------------------------------------------ mapico */
 
@@ -46,7 +51,6 @@ figure {
 .mapibox {
 
     display:block;
-    background-color: hsla(39, 87%, 73%, 0.4);
     background-position:0% 0%;
     background-size:contain;
     background-repeat:no-repeat;

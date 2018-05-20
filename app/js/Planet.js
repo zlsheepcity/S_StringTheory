@@ -6,6 +6,17 @@ function PrincePlanet(world) {
         this.WorldToHomeland();
         //this.show();
     }
+    this.Party = function(event) {
+        var world = this.world;
+        
+        // Check contacts
+        
+        var contact;
+        for ( contact in world.contacts ) this.UpdateContact(contact);
+            
+        
+        ccc(['Party!', 'Planet.Party']);
+    };
     this.show = function(options){
         cc('# Its Show Time ------------');
         this.landmarks();
@@ -33,15 +44,27 @@ function PrincePlanet(world) {
     this.resources = function() {
         ccc([this.world.resources,'Planet.resources']);
     };
-    this.Party = function(event) {
-        ccc(['No party!', 'Planet.Party']);
-    };
     this.SupportUI = function(){
-        ccc(['Currect State', 'Wifi:'+this.world.wifi, 'Planet.SupportUI']);
+        var world = this.world;
+        ccc([
+            'Currect State',
+            'Turn:'+world.turn,
+            'Wifi:'+world.wifi,
+            world.city.center.kanban.Board,
+            'Planet.SupportUI']);
     };
 
     // operations
 
+    this.UpdateContact = function(name) {
+        var world = this.world;
+        var contact = this.world.contacts[name];
+        if ( contact && contact.has_to_say ) 
+            this.Show_MarkerForMapico(contact.homeland);
+        if ( contact && !contact.has_to_say )
+            this.Hide_MarkerForMapico(contact.homeland);
+    };
+    
     this.WorldToHomeland = function() {
         var world = this.world;
 
@@ -179,6 +202,27 @@ function PrincePlanet(world) {
         ccc(['Who is it?',id,this.home,'Planet.checkMapico']);
         return false;
     };
+    
+    this.PrepareDialog = function(id,dialog){
+        var world = this.world;
+        var contact = world.contacts[id];
+        this.Hide_MarkerForMapico(contact.homeland);
+        this.Messenger.alert({
+            //message: dialog.msg,
+            unsafeMessage: '<b>'+contact.name+':</b> '+dialog.msg,
+            callback: function (value) {
+                world.planet.Show_MarkerForMapico(contact.homeland);
+                if (value) {
+                    console.log('Successfully destroyed the planet.')
+                } else {
+                    console.log('Chicken.')
+                }
+            }
+        });
+        ccc([id,dialog,'Planet.PrepareDialog']);
+    };
+    this.Messenger = vex.dialog;
+    this.Messenger.defaultOptions.className = 'vex-theme-flat-attack';
     
     // functions
 

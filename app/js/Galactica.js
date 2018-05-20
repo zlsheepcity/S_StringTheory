@@ -4,23 +4,23 @@ var Galactica;
 Galactica = {
     resources: [
         { name:'content' },
-        { name:'html_tag' },
-        { name:'css_rule' },
+        //{ name:'html_tag' },
+        //{ name:'css_rule' },
     ],
     landmarks: [
         { name:'index_valley' },
         { name:'content_fields' },
         { name:'router_lakes' },
-        { name:'body_coast' },
-        { name:'head_peak' },
-        { name:'north_land' },
+        //{ name:'body_coast' },
+        //{ name:'head_peak' },
+        //{ name:'north_land' },
         { name:'header_mountains' },
-        { name:'seobot_desert' },
-        { name:'sty_land' },
-        { name:'cascadia_land' },
-        { name:'sheet_peak' },
-        { name:'bold_mountains' },
-        { name:'git_river' },
+        //{ name:'seobot_desert' },
+        //{ name:'sty_land' },
+        //{ name:'cascadia_land' },
+        //{ name:'sheet_peak' },
+        //{ name:'bold_mountains' },
+        //{ name:'git_river' },
     ],
     contacts: [
         { name:'kanban', lvl:1 },
@@ -57,6 +57,24 @@ Galactica.chromosome = {
     
     city:{
         name:'index',
+        mission:{
+            name:'get_all_resources',
+            complete:false,
+            is_reached:function(){
+                var i, negative_answer = false;
+                for ( i in World.city.mission.goals )
+                    if ( !World.city.mission.goals[i].is_reached() ) negative_answer = true;
+                return ! negative_answer;
+            },
+            goals:[
+                {
+                    name:'get_content',
+                    is_reached:function(){
+                        return World.city.hasResource('content');
+                    },
+                }
+            ],
+        },
         contacts:['seobot1'],
         kde: {
             name:'market',

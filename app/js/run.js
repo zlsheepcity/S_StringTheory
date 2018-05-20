@@ -22,7 +22,7 @@ console.timeEnd('time_to_create_the_world');
 
 $(function () {
     World.Welcome();
-    Story.isNonStop = true;
+    Story.isNonStop = false;
     Story.Play();
     
     //Planet.Show_MarkerForMapico('kanban');

@@ -23,11 +23,12 @@ Story = {
             break;
             case 'kanban':
             
-                /* grab content */
+                /* grab_content */
                 if (
                     !world.city.hasResource('content')
                 ) {
                     cc('-- Quest: grab content');
+                    world.industry.ActivateQuest(contact,'grab_content');
                 }
                 /* */
             
@@ -89,8 +90,22 @@ Story = {
                 break;
         }
     },
-    Tasks: {
-        ContentForSeobot:
+    QuestRequest: function(quest){ // { name:quest,chapter:1 }
+        var questrequest = quest;
+        questrequest.id = questrequest.name + questrequest.chapter;
+        questrequest.type = 'nothing';
+        ccc([questrequest,'Story.QuestRequest']);
+        switch ( questrequest.id ) {
+            case 'grab_content1':
+                questrequest.msg = 'Grab the content! Kan! Ban!';
+            break;
+            default:
+                questrequest = false;
+        }
+        return questrequest;
+    },
+    Quests: {
+        grab_content:
             function(world) {
                 
             }
