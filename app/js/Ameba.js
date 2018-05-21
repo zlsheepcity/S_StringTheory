@@ -1,5 +1,15 @@
 /* ameba tester */
+function ameba_add_some_data(){
+    cc('ameba_add_some_data');
+    var job = new WorldJob({finish:function(){cc('goodjob!');}});
+    City.AddJobToList(job);
 
+    var job = new WorldJob({name:'longjob',cost:{days:3},finish:function(){cc('goodlongjob!');}});
+    City.AddJobToList(job);
+    
+    //City.AddResources('content');
+    World.resources.content.Grab();
+}
 function ameba_check_city_job(){
     cc('ameba_check_city_job');
     cc(City);cc(City.center.roof.joblist);

@@ -27,15 +27,20 @@ function PrinceIndustry(world) {
         world.industry.GatherResources();
 
         cc('# Dinner');
+        world.industry.DoDailyJob();
         world.industry.ContactAll(world);
 
         cc('# Party');
+        
         world.planet.Party('GoodEvening');
         world.planet.SupportUI();
         
         // Industry finished
         
         this.world.NeedsYou();
+    };
+    this.DoDailyJob = function(){
+        this.world.city.DoJobList();
     };
     this.ActivateQuest = function(name,quest){
         var world = this.world;

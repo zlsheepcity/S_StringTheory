@@ -101,6 +101,7 @@ function WorldCity(dna) {
         cc('... do payment');
     };
     this.DoJobList = function() {
+        ccc([this.center.roof.joblist, 'City.DoJobList']);
         for ( var id in this.center.roof.joblist )
             this.DoJob(id);
     };

@@ -23,9 +23,12 @@ console.timeEnd('time_to_create_the_world');
 /* ---------------------------------------------- MAIN RUN */
 $(function () {
     World.Welcome();
+    
+    ameba_add_some_data();
+    
     Story.isNonStop = false;
     Story.Play();
     
     //ameba_check_city_job();
-    ameba_check_wifi_transfer();
+    //ameba_check_wifi_transfer();
 });

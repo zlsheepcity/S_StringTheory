@@ -5,7 +5,7 @@ function PrincePlanet(world) {
         cc(this);
         this.WorldToHomeland();
         //this.show();
-    }
+    };
     this.Party = function(event) {
         var world = this.world;
         
@@ -13,7 +13,6 @@ function PrincePlanet(world) {
         
         var contact;
         for ( contact in world.contacts ) this.UpdateContact(contact);
-            
         
         ccc(['Party!', 'Planet.Party']);
     };
@@ -119,7 +118,6 @@ function PrincePlanet(world) {
         Industry.PlanetCall({name:name});
         
     };
-    
     this.Show_Mapico = function(id) {
         var mapico = this.checkMapico(id);
         if (!mapico) return false;
@@ -146,7 +144,31 @@ function PrincePlanet(world) {
         marker.classList.remove('is-active');
         return true;
     }
-
+    this.mapicoClicker = function(dom_event) {
+        var mapico = Planet.getMapicoFromEvent(dom_event);
+        if ( !mapico || !mapico.isActive ) return false;
+        Planet.ExplainDetailsForMapico(mapico.name);
+    };
+    this.ExplainDetailsForMapico = function(id){
+        this.Messenger.alert({
+            unsafeMessage: '<b>Mapico Info:</b> '+id,
+            callback: function (value) {
+                if (value) {
+                    console.log('Successfully destroyed the planet.')
+                } else {
+                    console.log('Chicken.')
+                }
+            }
+        });
+    };
+    this.getMapicoFromEvent = function(dom_event) {
+        var target = dom_event.currentTarget;
+        if (!target) return false;
+        var mapico = {};
+        mapico.name = target.title;
+        mapico.isActive = target.matches('.is-hidden') ? false : true ;
+        return mapico;
+    };
     this.insertMapico = function(id,layer) {
         if (!id) return false;
         if (
@@ -174,8 +196,10 @@ function PrincePlanet(world) {
         html.classList.add('is-hidden');
         html.appendChild(html_img);
         html.appendChild(html_marker);
+        html.addEventListener('click', Planet.mapicoClicker);
 
         mama.insertBefore(html, place);
+        
 
         // update home
 
