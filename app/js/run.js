@@ -26,5 +26,6 @@ $(function () {
     Story.isNonStop = false;
     Story.Play();
     
-    ameba_check_city_job();
+    //ameba_check_city_job();
+    ameba_check_wifi_transfer();
 });

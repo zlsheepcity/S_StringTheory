@@ -1,3 +1,8 @@
+/*
+    Industry (World.industry)
+    — game logic & processes
+*/
+
 function PrinceIndustry(world) {
     this.world = world;
     this.Welcome = function() {
@@ -14,14 +19,16 @@ function PrinceIndustry(world) {
             '-- Industry takes the lead, and rules the day',
             'Industry.GoodMorning.Day#'+world.turn
         ]);
-        
+
         // Schedule
-        
+
         cc('# Breakfast');
-        world.industry.ContactAll(world);
+        //world.industry.ContactAll(world);
         world.industry.GatherResources();
+
         cc('# Dinner');
         world.industry.ContactAll(world);
+
         cc('# Party');
         world.planet.Party('GoodEvening');
         world.planet.SupportUI();
@@ -86,8 +93,19 @@ function PrinceIndustry(world) {
             Story.Call( contact, world );
     };
     this.ConnectWifi = function(wifi) {
-        cc('-- more wifi '+wifi);
-        this.world.wifi += 1*wifi;
+        if (wifi>0) this.WifiTransaction(wifi);
+    };
+    this.ChargeWifi = function(wifi) {
+        if (wifi>0) this.WifiTransaction(wifi*(-1));
+    };
+    this.WifiBalance = function() {
+        return World.wifi;
+    }
+    this.WifiTransaction = function(wifi, official){
+        ccc([wifi, official, 'Industry.WifiTransaction']);
+        if (!wifi)  return false;
+        World.wifi += 1*wifi;
+        return World.wifi;
     };
     this.make_injection = function(patient,cure) {
         var id, i, single_action_key, single_action_value;
