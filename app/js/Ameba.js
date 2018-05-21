@@ -8,7 +8,9 @@ function ameba_add_some_data(){
     City.AddJobToList(job);
     
     //City.AddResources('content');
-    World.resources.content.Grab();
+    World.resources.content.Update(1);
+    cc(World.resources.content);
+    //World.resources.content.Grab();
 }
 function ameba_check_city_job(){
     cc('ameba_check_city_job');

@@ -39,8 +39,11 @@ function PrinceIndustry(world) {
         
         this.world.NeedsYou();
     };
-    this.DoDailyJob = function(){
+    this.DoDailyJob = function() {
         this.world.city.DoJobList();
+    };
+    this.GetJob = function(name) {
+        // return World.j
     };
     this.ActivateQuest = function(name,quest){
         var world = this.world;
@@ -70,15 +73,30 @@ function PrinceIndustry(world) {
         //this.world.city = new WorldCity( chromosome.city );
     };
     this.GatherResources = function() {
-        var id, gathered_resources = [];
+        var id;
+        var jobs_from_resource = [];
+        var total_jobs = [];
         var world = this.world;
-        for ( id in world.resources )
-            if ( world.resources[id].map && world.resources[id].lvl )
-                gathered_resources.push(id);
-        ccc([gathered_resources,'Industry.GatherResources']);
-        world.city.ClearResources();
-        world.city.AddResources(gathered_resources);
 
+        // create joblist from all resources
+
+        for ( id in world.resources )
+            if ( this.IsResourceAdopted(id) ) {
+                jobs_from_resource = world.resources[id].grab();
+                total_jobs = Industry.make_array_summ(total_jobs, jobs_from_resource);
+            };
+
+        // send job
+
+        //xxx
+
+        //gathered_resources.push(id);
+        //ccc([gathered_resources,'Industry.GatherResources']);
+        //world.city.ResetResources(gathered_resources);
+    };
+    this.IsResourceAdopted = function (id) {
+        var world = this.world;
+        return world.resources[id].map && world.resources[id].lvl;
     };
     this.PlanetCall = function(dialog) {
         //this.world.NextTurn();//test only
@@ -90,7 +108,7 @@ function PrinceIndustry(world) {
                     contact.name,
                     Story.QuestRequest( contact.quests[id] )
                 );
-        ccc([dialog,contact,'Industry.PlanetCall']);        
+        ccc([dialog,contact,'Industry.PlanetCall']);
     };
     this.ContactAll = function() {
         var world = this.world;
@@ -126,7 +144,7 @@ function PrinceIndustry(world) {
         if (!array1) array1 = [];
         if (array2.length)
             array1 = array1.concat(array2);
-        else 
+        else
             array1.push(array2);
         return array1;
     }

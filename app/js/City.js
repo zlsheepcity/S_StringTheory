@@ -50,7 +50,8 @@ function WorldCity(dna) {
     this.map = dna.map ? true : false ;
     this.age = 0;
     this.dna = dna;
-    this.resources = [];
+    this.resources = []; // available resources
+    this.products = [];
     this.gov = {name:'anarchy'};
     this.center = {
         roof: dna.roof ? dna.roof : {
@@ -82,11 +83,26 @@ function WorldCity(dna) {
         }
     };
     // actions.job
+    this.TakeThisJoblist = function(joblist) {
+        var name;
+        for ( name in joblist )
+            if ( this.NoJob(name) )
+                this.AddJobToList( Industry.GetJob(name) );
+    };
     this.AddJobToList = function(job){
         if( !job || !job.name ) return false;
         this.center.roof.joblist[job.name] = job;
         return true;
     };
+    this.NoJob = function(id) {
+        return ! this.CheckJob(id);
+    }
+    this.CheckJob = function(id) {
+        if ( !id ) return false;
+        if ( !this.center.roof.joblist[id] ) return false;
+        if ( !this.center.roof.joblist[id].progress ) return false;
+        return this.center.roof.joblist[id].progress;
+    }
     this.DoJob = function(name){
         cc('... check payment');
         if (
@@ -105,12 +121,27 @@ function WorldCity(dna) {
         for ( var id in this.center.roof.joblist )
             this.DoJob(id);
     };
+    // actions products
+    this.AddProducts = function(name) {
+        this.products = Industry.make_array_summ(this.products, name);
+    };
+    this.ClearProducts = function(){
+        this.products = [];
+    };
+    this.ResetProducts = function(name) {
+        this.ClearProducts();
+        this.AddProducts(name);
+    }
     // actions resources
     this.AddResources = function(resource) {
         this.resources = Industry.make_array_summ(this.resources, resource);
     };
     this.ClearResources = function() {
         this.resources = [];
+    };
+    this.ResetResources = function(resource) {
+        this.ClearResources();
+        this.AddResources(resource);
     };
     this.hasResource = function(resource) {
         return this.resources && this.resources.indexOf(resource) > -1;

@@ -3,7 +3,15 @@
 var Galactica;
 Galactica = {
     resources: [
-        { name:'content' },
+        {
+            name:'content',
+            jobs:{
+                grow_content:
+                    { min_lvl: 1,   max_lvl: false },
+                grow_formatted_content:
+                    { min_lvl: 1,   max_lvl: 1 },
+            },
+        },
         //{ name:'html_tag' },
         //{ name:'css_rule' },
     ],
@@ -33,6 +41,11 @@ Galactica = {
             name:'grow_content',
             cost: { days:1 },
             finish:function(){cc('-- new content');City.AddResources('content');}
+        },
+        {
+            name:'grow_formatted_content',
+            cost: { days:1 },
+            finish:function(){cc('-- new formatted content');City.AddResources('content');}
         },
     ],
     chromosome: {}
