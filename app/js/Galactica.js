@@ -44,7 +44,7 @@ Galactica = {
         },
         {
             name:'grow_formatted_content',
-            cost: { days:1 },
+            cost: { days:2 },
             finish:function(){cc('-- new formatted content');City.AddResources('content');}
         },
     ],

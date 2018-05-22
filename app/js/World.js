@@ -9,6 +9,7 @@ function WorldJob(dna) {
     this.progress = this.cost.days;
     this.start = dna && dna.start ? dna.start : false ;
     this.finish = dna && dna.finish ? dna.finish : false ;
+    this.dna = dna;
 }
 function WorldResource(dna) {
     this.name = dna && dna.name ? dna.name : 'content';
@@ -30,6 +31,7 @@ function WorldResource(dna) {
         if ( max && max <= this.lvl ) return false;
         cc('update!'+this.lvl);
         this.lvl++;
+        this.map = true;
         cc('update!'+this.lvl);
         return this;
     }
@@ -144,7 +146,7 @@ function KingWorld(chromosome) {
     this.jobs = {};
     for ( i in Galactica.jobs )
         if ( Galactica.jobs[i].name )
-            this.jobs[Galactica.contacts[i].name] =
+            this.jobs[Galactica.jobs[i].name] =
                 new WorldJob( Galactica.jobs[i] );
 
     // --------- Planet — prince of visualization

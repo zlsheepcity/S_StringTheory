@@ -82,12 +82,18 @@ function WorldCity(dna) {
             map:true,
         }
     };
+
+
     // actions.job
+
     this.TakeThisJoblist = function(joblist) {
-        var name;
-        for ( name in joblist )
-            if ( this.NoJob(name) )
-                this.AddJobToList( Industry.GetJob(name) );
+        var i;
+        for ( i in joblist )
+            if ( this.NoJob(joblist[i]) )
+                this.AddJobToList( Industry.GetJob(joblist[i]) );
+    };
+    this.DoYourJob = function() {
+        this.DoJobList();
     };
     this.AddJobToList = function(job){
         if( !job || !job.name ) return false;
@@ -96,13 +102,18 @@ function WorldCity(dna) {
     };
     this.NoJob = function(id) {
         return ! this.CheckJob(id);
-    }
+    };
     this.CheckJob = function(id) {
         if ( !id ) return false;
         if ( !this.center.roof.joblist[id] ) return false;
         if ( !this.center.roof.joblist[id].progress ) return false;
         return this.center.roof.joblist[id].progress;
-    }
+    };
+    this.DoJobList = function() { // 
+        ccc([this.center.roof.joblist, 'City.DoJobList']);
+        for ( var id in this.center.roof.joblist )
+            this.DoJob(id);
+    };
     this.DoJob = function(name){
         cc('... check payment');
         if (
@@ -115,11 +126,6 @@ function WorldCity(dna) {
             this.center.roof.joblist[name] = false;
         }
         cc('... do payment');
-    };
-    this.DoJobList = function() {
-        ccc([this.center.roof.joblist, 'City.DoJobList']);
-        for ( var id in this.center.roof.joblist )
-            this.DoJob(id);
     };
     // actions products
     this.AddProducts = function(name) {
