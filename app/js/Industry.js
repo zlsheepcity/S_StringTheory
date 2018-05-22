@@ -39,12 +39,9 @@ function PrinceIndustry(world) {
         this.world.NeedsYou();
     };
     this.DoDailyJob = function() {
-        this.world.city.DoJobList();
+        this.world.city.DoYourJob();
     };
     this.GetJob = function(name) {
-        //return this.world.jobs[name];
-        //var job = this.world.jobs[name];
-        //return job;
         var job = new WorldJob(this.world.jobs[name].dna);
         return job;
     };
@@ -85,19 +82,14 @@ function PrinceIndustry(world) {
 
         for ( id in world.resources )
             if ( this.IsResourceAdopted(id) ) {
-                cc('yes');
                 jobs_from_resource = world.resources[id].Grab();
                 total_jobs = Industry.make_array_summ(total_jobs, jobs_from_resource);
             };
 
         // send job
-        cc('total_jobs');
-        cc(total_jobs);
-        this.world.city.TakeThisJoblist(total_jobs);
 
-        //gathered_resources.push(id);
-        //ccc([gathered_resources,'Industry.GatherResources']);
-        //world.city.ResetResources(gathered_resources);
+        ccc(['jobs:',total_jobs,'Industry.GatherResources']);
+        this.world.city.TakeThisJoblist(total_jobs);
     };
     this.IsResourceAdopted = function (id) {
         var world = this.world;

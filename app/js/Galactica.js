@@ -4,6 +4,13 @@ var Galactica;
 Galactica = {
     resources: [
         {
+            name:'idea',
+            jobs:{
+                find_idea:
+                    { min_lvl: 1,   max_lvl: false },
+            },
+        },
+        {
             name:'content',
             jobs:{
                 grow_content:
@@ -12,8 +19,41 @@ Galactica = {
                     { min_lvl: 2,   max_lvl: false },
             },
         },
-        //{ name:'html_tag' },
+        {
+            name:'html_tag',
+            jobs:{
+                grow_html_tag:
+                    { min_lvl: 1,   max_lvl: false },
+            },
+        },
         //{ name:'css_rule' },
+    ],
+    jobs: [
+        {
+            name:'find_idea',
+            cost: { days:7 },
+            finish:function(){cc('--- idea!');City.AddResources('idea');}
+        },
+        {
+            name:'construct_content_farm',
+            cost: { days:1 },
+            finish:function(){cc('--- content farm constructed');World.resources.content.Update(1);}
+        },        
+        {
+            name:'grow_content',
+            cost: { days:1 },
+            finish:function(){cc('--- new content');City.AddResources('content');}
+        },
+        {
+            name:'grow_formatted_content',
+            cost: { days:1 },
+            finish:function(){cc('--- new formatted content');City.AddResources('content');}
+        },
+        {
+            name:'grow_html_tag',
+            cost: { days:1 },
+            finish:function(){cc('--- new html_tag');City.AddResources('html_tag');}
+        },
     ],
     landmarks: [
         { name:'index_valley' },
@@ -35,18 +75,6 @@ Galactica = {
         { name:'roof', lvl:1, homeland:'index' },
         { name:'admin', lvl:1, homeland:'router_lakes' },        
         { name:'seobot1', lvl:1 },
-    ],
-    jobs: [
-        {
-            name:'grow_content',
-            cost: { days:1 },
-            finish:function(){cc('-- new content');City.AddResources('content');}
-        },
-        {
-            name:'grow_formatted_content',
-            cost: { days:2 },
-            finish:function(){cc('-- new formatted content');City.AddResources('content');}
-        },
     ],
     chromosome: {}
 };
@@ -70,6 +98,7 @@ Galactica.chromosome = {
     },
     
     resources:{
+        idea:{map:true,lvl:1},
         content:{map:false},
         html_tag:{map:false},
         css_rule:{map:false},

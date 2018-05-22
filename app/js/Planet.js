@@ -181,6 +181,8 @@ function PrincePlanet(world) {
             'Turn:'+world.turn,
             'Wifi:'+world.wifi,
             City.center.kanban.Board,
+            'City resources:',
+            City.resources,
             'City jobs:',
             City.center.roof.joblist,
             'Planet.SupportUI'
