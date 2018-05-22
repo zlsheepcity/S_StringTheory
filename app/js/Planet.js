@@ -1,5 +1,86 @@
+function PlanetaryMapico(name) {
+    this.name = name ? name : 'mapico';
+    this.dom = false;
+    this.DomAction = function(dom_event){
+        var name, dna;
+        dna = {dom_event:dom_event};
+        name = Planet.RecognizeMapico(dna);
+        Planet.ShowFocusByMapico(name); // default action
+    };
+    this.ShowFocus = function(){
+        ccc([this.name,this,'Mapico.ShowFocus()']);
+    };
+}
+
 function PrincePlanet(world) {
     this.world = world;
+
+    // born process
+
+    this.BornLife = function() {
+        var world = this.world;
+        this.BornMapicoFamily(world);
+    };
+    this.BornMapicoFamily = function(world) {
+        // clear place
+        this.home.mapico = {};
+        var name, mapico;
+        // landmarks
+        for ( name in world.landmarks ) {
+            mapico = this.GiveHomeForMapico(name);
+        }
+    };
+
+    // mapico family
+
+    this.GiveHomeForMapico = function(name) {
+        
+    };
+    this.RecognizeMapico = function(dna) {
+        var mapico = false;
+        if ( dna && dna.dom_event ) {
+            mapico = dom_event.currentTarget.title;
+        }
+        if ( dna && dna.name ) {
+            mapico = dna.name;
+        }
+        if ( mapico && !this.home[mapico] ) mapico = false;
+        return mapico;
+    };
+    this.ShowFocusByMapico = function(name) {
+        if (!this.RecognizeMapico({name:name})) return false;
+        this.home.mapico[name].ShowFocus();
+    };
+
+    // home model
+
+    this.home = {
+        mapico:{},
+    };
+
+
+    // services
+
+    this.ClassService = function(patient,classname,action){
+        if (!patient && !classname) return false;
+        if (!action) action = 'inject'; // inject/cure/change
+        switch(action){
+            case 'cure':
+                patient.classList.remove(classname);
+                break;
+            case 'change':
+                break;
+            case 'inject':
+            default:
+                patient.classList.add(classname);
+                break;
+        };
+    };
+    this.ChildService = function(){};
+    this.SearchService = function(name){};
+
+    /*******************************/
+
     this.Welcome = function() {
         cc('# Welcome Planet!');
         cc(this);
@@ -256,7 +337,6 @@ function PrincePlanet(world) {
         else
             return document.querySelector('#'+id);
     };
-    this.home = {};
     this.paths = {
         mapico: 'art/planet/',
     }
