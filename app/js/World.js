@@ -27,12 +27,10 @@ function WorldResource(dna) {
         return this.generate_joblist();
     };
     this.Update = function(max){
-        cc('update?'+max);
         if ( max && max <= this.lvl ) return false;
-        cc('update!'+this.lvl);
         this.lvl++;
         this.map = true;
-        cc('update!'+this.lvl);
+        cc('resource updated: '+this.name+'.'+this.lvl);
         return this;
     }
     this.Destroy = function(){

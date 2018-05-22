@@ -9,7 +9,7 @@ Galactica = {
                 grow_content:
                     { min_lvl: 1,   max_lvl: false },
                 grow_formatted_content:
-                    { min_lvl: 1,   max_lvl: 1 },
+                    { min_lvl: 2,   max_lvl: false },
             },
         },
         //{ name:'html_tag' },

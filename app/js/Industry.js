@@ -8,7 +8,6 @@ function PrinceIndustry(world) {
     this.Welcome = function() {
         cc('# Welcome Industry!');
         cc(this);
-        this.world.planet.show();
         //this.world.NeedsYou();//not now
     }
     this.GoodMorning = function() {
@@ -155,26 +154,3 @@ function PrinceIndustry(world) {
         return array1;
     };
 }
-function wowWow() {
-    // math & programming shortcuts
-    this.to_array = function (data,append) {
-        var output = append && append.length ? append : [];
-        if (data.length)
-            output = output.concat(data);
-        else if (data)
-            output.push(data);
-        return output;
-    };
-    this.do_object_sex = function(mom,dad) {
-        var id, i;
-        var baby = mom;
-        for ( id in dad ) { // each dad
-            if ( baby[id] && baby[id].length && dad[id].length )
-                baby[id] = this.do_object_sex(baby[id],dad[id]);
-            else
-                baby[id] = dad[id];
-        };
-        return baby;
-    };
-}
-var wow = new wowWow();
