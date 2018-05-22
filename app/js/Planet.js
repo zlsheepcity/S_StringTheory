@@ -1,11 +1,60 @@
 function PlanetaryMapico(name) {
     this.name = name ? name : 'mapico';
+    this.layer = false;
     this.dom = false;
     this.DomAction = function(dom_event){
         var name, dna;
         dna = {dom_event:dom_event};
         name = Planet.RecognizeMapico(dna);
         Planet.ShowFocusByMapico(name); // default action
+    };
+    this.ConstructDom = function(state) {
+        var layer = this.layer ? this.layer : 'landmarks';
+        var id = 'mapico--'+this.name;
+        
+        // dom
+        
+        var dom_mama = Planet.Doma('mapico');
+        var dom_place = Planet.Doma('mapico-'+layer);
+        var html = document.createElement('figure');
+        var html_img = document.createElement('img');
+        var html_marker = document.createElement('figcaption');
+        
+        // img
+        
+        html_img.alt = this.name;
+        html_img.src = Planet.paths.mapico + id + '.svg';
+        html_img.classList.add('mapico_img');
+        
+        // figcaption
+        
+        html_marker.classList.add('mapico_marker');
+        //html_marker.addEventListener('click', this.DomAction);
+        
+        // figure
+        
+        html.id = id;
+        html.name = mapico.name;
+        html.classList.add('mapico');
+        html.classList.add(html.id);
+        html.appendChild(html_img);
+        html.appendChild(html_marker);
+        html.addEventListener('click', this.DomAction);
+        
+        // state
+        
+        html.classList.add('from-'+layer);
+        html.classList.add('is-hidden');
+        
+        // parents
+        
+        mama.insertBefore(html, place);
+        
+        // official
+        
+        this.dom = html;
+        return html;
+
     };
     this.ShowFocus = function(){
         ccc([this.name,this,'Mapico.ShowFocus()']);
@@ -34,8 +83,13 @@ function PrincePlanet(world) {
     // mapico family
 
     this.GiveHomeForMapico = function(name) {
-        
+        var mapico = new PlanetaryMapico(name);
+        mapico.ConstructDom();
     };
+    this.GiveDomeForMapico = function(mapico) {
+///////////////////////////////////////////////////////////
+    };
+
     this.RecognizeMapico = function(dna) {
         var mapico = false;
         if ( dna && dna.dom_event ) {
@@ -57,6 +111,12 @@ function PrincePlanet(world) {
     this.home = {
         mapico:{},
     };
+    this.dom = function(name,params) {
+        return document.querySelector('.PlanetFor--'+name);
+    };
+    this.Doma = function(name,params) {
+        return document.querySelector('.PlanetFor--'+name);
+    };
 
 
     // services
@@ -77,7 +137,9 @@ function PrincePlanet(world) {
         };
     };
     this.ChildService = function(){};
-    this.SearchService = function(name){};
+    this.SearchService = function(classname){
+        return document.querySelector('.'+classname);
+    };
 
     /*******************************/
 
@@ -331,12 +393,6 @@ function PrincePlanet(world) {
     
     // functions
 
-    this.dom = function(id,search_by_id) {
-        if ( !search_by_id )
-            return document.querySelector('.PlanetFor--'+id);
-        else
-            return document.querySelector('#'+id);
-    };
     this.paths = {
         mapico: 'art/planet/',
     }
