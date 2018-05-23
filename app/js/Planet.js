@@ -13,8 +13,9 @@ function PlanetaryMapico(name) {
     this.dom = false;
     this.DomAction = function(dom_event){
         var name, dna;
-        dna = {name:dom_event.currentTarget.id};
-        name = Planet.RecognizeMapico(dna);
+        //dna = {name:dom_event.currentTarget.id};
+        //name = Planet.RecognizeMapico(dna);
+        name = dom_event.currentTarget.getAttribute('data-name');
         Planet.ShowFocusByMapico(name); // default action
     };
     this.ConstructDom = function(state) {
@@ -27,13 +28,26 @@ function PlanetaryMapico(name) {
         var dom_mama = Planet.Doma('mapico');
         var dom_place = Planet.Doma('mapico-'+layer);
         var html = document.createElement('figure');
-        var html_img = document.createElement('img');
         var html_marker = document.createElement('figcaption');
+        var html_img = document.querySelector('#MapicoLoader > svg#'+name);
+        var action_trigger;
+        if (html_img) {
+            action_trigger = html_img ? html_img.querySelectorAll('path') : false;
+            if (action_trigger)
+                action_trigger.forEach(function(el){
+                    el.setAttribute('data-name', name);
+                });
+        }
+        else {
+            html_img = document.createElement('img');
+            html_img.alt = this.name;
+            html_img.src = Planet.paths.mapico + name + '.svg';
+            html_img.setAttribute('data-name', name);
+            action_trigger = html_img;
+        }
 
         // img
 
-        html_img.alt = this.name;
-        html_img.src = Planet.paths.mapico + name + '.svg';
         html_img.classList.add('mapico_img');
 
         // figcaption
@@ -44,11 +58,21 @@ function PlanetaryMapico(name) {
         // figure
 
         html.id = name;
+        html.setAttribute('data-name', name);
         html.classList.add('mapico');
         html.classList.add(cssname);
         html.appendChild(html_img);
         html.appendChild(html_marker);
-        html.addEventListener('click', this.DomAction);
+
+        // events
+        var DomAction = this.DomAction;
+        if (action_trigger.forEach)
+            action_trigger.forEach(function(el){
+                el.addEventListener('click', DomAction);
+            });
+        else
+            action_trigger.addEventListener('click', DomAction);
+
 
         // state
 
@@ -119,6 +143,7 @@ function PrincePlanet(world) {
         cc(this);
         cc('> Planet.BornLife');
         this.BornLife();
+        this.ReviewMap();
     };
     this.BornLife = function() {
         var world = this.world;
@@ -173,13 +198,12 @@ function PrincePlanet(world) {
         home['kanban'].DecorateDom({visibility:true});
         home['seobot1'].DecorateDom({visibility:true});
         home['seobot2'].DecorateDom({visibility:true});
+        return true;
     };
     this.SupportUI = function(){
         var world = this.world;
         ccc([
-            'Currect State',
-            'Turn:'+world.turn,
-            'Wifi:'+world.wifi,
+            'Turn:'+world.turn +', Wifi:'+world.wifi,
             City.center.kanban.Board,
             'City resources:',
             City.resources,
@@ -187,6 +211,7 @@ function PrincePlanet(world) {
             City.center.roof.joblist,
             'Planet.SupportUI'
         ]);
+        return true;
     };
 
 

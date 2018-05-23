@@ -4,6 +4,10 @@ resource → job
 job + cost → product
 cost = wifi/sheep/days/dependencies
 
+# World
+
+
+
 # Description of daily process
 
 // job planning

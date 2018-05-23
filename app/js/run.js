@@ -26,7 +26,7 @@ $(function () {
     Story.isNonStop = false;
     //Story.Play();
     
-    ameba_kliker(); // ameba!
-
-    
+    //ameba_kliker(); // ameba!
+    //ameba_babel(); // ameba!
+    //cc('eee?');
 });

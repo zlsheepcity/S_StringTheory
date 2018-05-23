@@ -90,6 +90,7 @@ function PrinceIndustry(world) {
 
         ccc(['jobs:',total_jobs,'Industry.GatherResources']);
         this.world.city.TakeThisJoblist(total_jobs);
+        return total_jobs;
     };
     this.IsResourceAdopted = function (id) {
         var world = this.world;

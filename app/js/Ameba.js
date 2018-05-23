@@ -1,4 +1,8 @@
 /* ameba tester */
+function ameba_babel(){
+    const getMessage2 = () => "Hello World 2";
+    cc(getMessage2());
+};
 function ameba_kliker(){
     
     Planet.ReviewMap();

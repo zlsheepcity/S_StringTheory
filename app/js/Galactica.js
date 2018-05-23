@@ -32,27 +32,56 @@ Galactica = {
         {
             name:'find_idea',
             cost: { days:7 },
-            finish:function(){cc('--- idea!');City.AddResources('idea');}
+            finish:function(){
+                cc('--- idea!');
+                World.ResourceAdd('idea');
+                return true;
+            }
         },
         {
             name:'construct_content_farm',
             cost: { days:1 },
-            finish:function(){cc('--- content farm constructed');World.resources.content.Update(1);}
-        },        
+            finish:function(){
+                cc('--- content farm constructed');
+                World.ResourceUpdate('content',1);
+                return true;
+            }
+        },
         {
             name:'grow_content',
             cost: { days:1 },
-            finish:function(){cc('--- new content');City.AddResources('content');}
+            finish:function(){
+                cc('--- new content');
+                World.ResourceAdd('content');
+                return true;
+            }
         },
         {
             name:'grow_formatted_content',
             cost: { days:1 },
-            finish:function(){cc('--- new formatted content');City.AddResources('content');}
+            finish:function(){
+                cc('--- new formatted content');
+                World.ResourceAdd('content');
+                return true;
+            }
+        },
+        {
+            name:'construct_html',
+            cost: { days:1 },
+            finish:function(){
+                cc('--- html constructed');
+                World.ResourceUpdate('html_tag',1);
+                return true;
+            }
         },
         {
             name:'grow_html_tag',
             cost: { days:1 },
-            finish:function(){cc('--- new html_tag');City.AddResources('html_tag');}
+            finish:function(){
+                cc('--- new html_tag');
+                World.ResourceAdd('html_tag');
+                return true;
+            }
         },
     ],
     landmarks: [
