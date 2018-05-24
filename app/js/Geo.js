@@ -60,7 +60,7 @@ function PrinceGeography(world) {
         this.TectonicMoveContinents();
     }
     this.TectonicBornContinents = function() {
-        var status = this.StatusManager('Tectonics');
+        var status = this.StatusManager('Tectonics');cc('tec');
         // preprocess
         if (!status.doma) this.NewHome();
         // process
@@ -90,7 +90,8 @@ function PrinceGeography(world) {
         html_trigga
             .attr('data-name',name)
             .addClass('mapico_trigga')
-            .appendTo(html_info);
+            .appendTo(html_info)
+            .on('click',this.domContinentalQuake);
         html_info
             .addClass('mapico_info')
             .appendTo(html);
@@ -103,6 +104,14 @@ function PrinceGeography(world) {
         this.dom.map.append(html);
         this.dom.continents[name] = html;
         return html;
+    }
+    this.domContinentalQuake = function(dom_event) {
+        // XOXO
+        var kliker = $(dom_event.target);
+        var name = kliker.attr('data-name');
+        Geo.dom.continents[name].zoomTo(Geo.continental_zoom);
+        cc(name);
+        evt.stopPropagation();
     }
 
     // -------------------------------------------- HQ
@@ -122,6 +131,15 @@ function PrinceGeography(world) {
     this.hasContinents = function() { return true }
     this.hasDom = function() { return this.HomeInspection() }
     this.hasWorld = function() { return this.world && this.world.name }
+    this.continental_zoom = {
+        targetsize:1,
+        duration:320,
+        easing:'ease-out',
+        //root: $(document.body),
+        animationendcallback: null,
+        closeclick: true,
+        preservescroll: true
+    }
 
 
 }
@@ -145,3 +163,6 @@ function GeoWorld() {
 }
 var World = new GeoWorld();
 var Geo = World.geo;
+$(function () {
+    Geo.TectonicBornContinents();
+});

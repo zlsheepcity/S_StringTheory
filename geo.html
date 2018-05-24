@@ -48,8 +48,18 @@
 <!-- ## custom settings below-->
 
 <style>
-    img {
-        max-width: 100%;
+    .zoomViewport {
+        background:rgba(220,0,0,.2);
+        /*height:400px;
+        width:50%;
+        overflow:visible!important;*/
+    }
+    .zoomContainer {
+        background:rgba(0,220,0,.2);
+        /*margin-left:50%;*/
+    }
+    .mapibox__mama{
+    /*height:400px;*/
     }
 </style>
 
@@ -62,8 +72,14 @@
 <!-- =================================================== ʕ⊙ᴥ⊙ʔ  -->
 <!-- =================================================== [CONTENT START] -->
 
-<div class="WorldGeo">
-    <div class="WorldMap">
+<div class="WorldGeo planetmap">
+    <div class="mapibox">
+        <div class="zoomViewport">
+            <div class="zoomContainer">
+                <div class="WorldMap mapibox__mama PlanetFor--mapico">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

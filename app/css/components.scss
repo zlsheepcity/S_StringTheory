@@ -70,8 +70,8 @@ figure {
     }
 
 }
-
 .mapico {
+    pointer-events: none;
     position: absolute;
     display: block;
     .mapico_img {
@@ -97,6 +97,13 @@ figure {
     &:hover .mapico_marker.animated {
         animation-duration:0;
         animation-name:none;
+    }
+    .mapico_trigga {
+        pointer-events: all;
+        display:block;
+        width:2rem;
+        height:2rem;
+        background:brown;
     }
 
     &.is-hidden {
