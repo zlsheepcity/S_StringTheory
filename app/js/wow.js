@@ -27,6 +27,9 @@ function wowWow() {
         for ( row in log ) cc(log[row]);
         console.groupEnd();
     };
+    // error log
+    this.aer = [];
+    this.ae = function(ae, proof) {this.aer.push({msg:ae,proof:proof});cc('AE! '+ae);};
 }
 var wow = new wowWow();
 var cc = wow.cc;
