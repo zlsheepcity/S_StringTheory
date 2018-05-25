@@ -53,6 +53,16 @@ function PrinceIndustry(world) {
         contact.quests[quest] = { name:quest,chapter:1 };
         kanban.setTodo(quest);
     };
+    this.GeoDescription = function() {
+        // XOXOXOX
+        var description = {};
+        description.relief = {
+            index: {name:'index',map:true,contact:true},
+            kanban: {name:'kanban',map:true,contact:true},
+            index_valley: {name:'index_valley',map:true,contact:true},
+        }
+        return description;
+    };
     this.ApplyChromosome = function(chromosome) {
         cc('# ApplyChromosome:');
         cc(chromosome);

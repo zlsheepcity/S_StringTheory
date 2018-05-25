@@ -1,7 +1,71 @@
 function KingWorld(chromosome) {
 
+    this.Welcome = function() {
+        cc('# Welcome to the World');
+        cc(this);
+        this.planet.Welcome();
+        this.industry.Welcome();
+        return this;
+    };
+    this.NextTurn = function() {
+        this.awaiting = false;
+        this.industry.GoodMorning();
+        return this;
+    };
+    this.NeedsYou = function() {
+        cc('# The World needs You! ....... .... ..... .........(●ᴥ●)');
+        this.awaiting = true;
+        if ( Story && Story.isNonStop ) Story.Autoplay();
+        return this;
+    };
+
+    // --------- Life ciycle
+
+    this.ResourceUpdate = function(resource, lvl) {
+        if ( this.resources[resource] )
+            this.resources[resource].Update(lvl);
+        return this;
+    }
+    this.ResourceGather = function() {
+        this.industry.GatherResources();
+        return this;
+    }
+    this.ResourceAdd = function(resource) {
+        this.city.AddResources(resource);
+        return this;
+    }
+    this.JobWork = function() {
+        this.industry.DoDailyJob();
+        return this;
+    }
+    this.JobTake = function(id) {
+        this.city.TakeJob(id);
+        return this;
+    }
+
+    // --------- Display
+
+    this.ReviewMap = function() {
+        this.planet.ReviewMap();
+        return this;
+    }
+    this.UI = function() {
+        this.planet.SupportUI();
+        return this;
+    }
+
+    // ============================================== Data center
+
+    this.GeoDescription = function() {
+        var description = {};
+        description.relief = this.landmarks;
+        return description;
+    }
+
+    // ============================================== World Coronation
+
     // --------- Required
-    
+
     var required_messages = [];
 
     if ( !Galactica ) required_messages.push('--- Galactica is missed. No Galactica — no World.');
@@ -23,14 +87,14 @@ function KingWorld(chromosome) {
     this.turn = chromosome && chromosome.turn ? chromosome.turn : 0;
     this.wifi = chromosome && chromosome.wifi ? chromosome.wifi : 0;
     this.name = chromosome && chromosome.name ? chromosome.name : 'KingWorld';
-    this.mission = chromosome && chromosome.mission ? chromosome.mission : {
-        name:'Grab content',
-        goals: {
-            grab_content: function(){ return false; }
-        },
-    };
+
+    /* --------- HQ */
+
     this.chromosome = chromosome;
-    
+    this.aer = [];
+    this.ae = function(ae) {this.aer.push(ae)};
+    this.mission = chromosome && chromosome.mission ? chromosome.mission : {};
+    this.awaiting = false;
 
     // --------- City
 
@@ -88,52 +152,6 @@ function KingWorld(chromosome) {
     
     // --------- Functions
 
-    this.Welcome = function() {
-        cc('# Welcome to the World');
-        cc(this);
-        this.planet.Welcome();
-        this.industry.Welcome();
-        return this;
-    };
-    this.NextTurn = function() {
-        this.industry.GoodMorning();
-        return this;
-    };
-    this.NeedsYou = function() {
-        cc('# The World needs You! ....... .... ..... ..... . ........... .........(●ᴥ●)');
-        if ( Story && Story.isNonStop ) Story.Autoplay();
-        // Activate User Input
-        return this;
-    };
-    this.ReviewMap = function() {
-        this.planet.ReviewMap();
-        return this;
-    }
-    this.UI = function() {
-        this.planet.SupportUI();
-        return this;
-    }
-    // --------- Functions: life events
-    this.ResourceUpdate = function(resource, lvl) {
-        if ( this.resources[resource] )
-            this.resources[resource].Update(lvl);
-        return this;
-    };
-    this.ResourceGather = function() {
-        this.industry.GatherResources();
-        return this;
-    };
-    this.ResourceAdd = function(resource) {
-        this.city.AddResources(resource);
-        return this;
-    };
-    this.JobWork = function() {
-        this.industry.DoDailyJob();
-        return this;
-    };
-    this.JobTake = function(id) {
-        this.city.TakeJob(id);
-        return this;
-    }
+
 }
 

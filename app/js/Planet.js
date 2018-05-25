@@ -131,12 +131,12 @@ function PlanetaryMapico(name) {
     }
 }
 function PrincePlanet(world) {
-    this.world = world;
+
     this.paths = {
         mapico: 'art/planet/',
     }
 
-    // born process
+    // -------------------------------------------- export
 
     this.Welcome = function() {
         cc('# Welcome Planet!');
@@ -144,30 +144,8 @@ function PrincePlanet(world) {
         cc('> Planet.BornLife');
         this.BornLife();
         this.ReviewMap();
+        return this;
     };
-    this.BornLife = function() {
-        var world = this.world;
-        this.BornMapicoFamily(world);
-    };
-    this.BornMapicoFamily = function(world) {
-        // clear place
-        this.home.mapico = {};
-        var name;
-        // landmarks
-        for ( name in world.landmarks )
-            this.GiveHomeForMapico({name:name,layer:'landmarks'});
-        // resources
-        for ( name in world.resources )
-            this.GiveHomeForMapico({name:name,layer:'resources'});
-        // buildings
-        this.GiveHomeForMapico({name:'index',layer:'buildings'});
-        this.GiveHomeForMapico({name:'kanban',layer:'buildings'});
-        this.GiveHomeForMapico({name:'seobot1',layer:'buildings'});
-        this.GiveHomeForMapico({name:'seobot2',layer:'buildings'});
-    };
-
-    // daily process
-
     this.Party = function(reason) {
         ccc(['reason:',reason,'# Planet.Party!']);
         var world = this.world;
@@ -177,7 +155,7 @@ function PrincePlanet(world) {
             this.AskToSmile(contact);
         // finish
         this.ReviewMap();
-        return true; // good party
+        return this;
     };
     this.ReviewMap = function() {
         cc('> Planet.ReviewMap');
@@ -198,7 +176,7 @@ function PrincePlanet(world) {
         home['kanban'].DecorateDom({visibility:true});
         home['seobot1'].DecorateDom({visibility:true});
         home['seobot2'].DecorateDom({visibility:true});
-        return true;
+        return this;
     };
     this.SupportUI = function(){
         var world = this.world;
@@ -211,7 +189,40 @@ function PrincePlanet(world) {
             City.center.roof.joblist,
             'Planet.SupportUI'
         ]);
-        return true;
+        return this;
+    };
+    this.VisitLandmark = function(name) {
+        cc('XOXOX.VisitLandmark');
+        return this;
+    }
+
+    // -------------------------------------------- HQ
+
+    // born process
+
+    this.world = world;
+
+    this.BornLife = function() {
+        var world = this.world;
+        this.BornMapicoFamily(world);
+        return this;
+    };
+    this.BornMapicoFamily = function(world) {
+        // clear place
+        this.home.mapico = {};
+        var name;
+        // landmarks
+        for ( name in world.landmarks )
+            this.GiveHomeForMapico({name:name,layer:'landmarks'});
+        // resources
+        for ( name in world.resources )
+            this.GiveHomeForMapico({name:name,layer:'resources'});
+        // buildings
+        this.GiveHomeForMapico({name:'index',layer:'buildings'});
+        this.GiveHomeForMapico({name:'kanban',layer:'buildings'});
+        this.GiveHomeForMapico({name:'seobot1',layer:'buildings'});
+        this.GiveHomeForMapico({name:'seobot2',layer:'buildings'});
+        return this;
     };
 
 

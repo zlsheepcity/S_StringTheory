@@ -3,26 +3,11 @@
     display world, catch events
     v2018.5.24
 
-    GeoMapico
-    map icon
-
     Tectonics, lord
 
     StatusManager, HQ
 */
-function GeoMapico(dna){
-    if(!dna||!dna.name) {
-        World.ae({msg:'GeoMapico: dna net',proof:dna});
-        return false;
-    }
-    this.name = dna && dna.name ? dna.name : 'mapico';
-}
 function PrinceGeography(world) {
-    this.world = world;
-    this.paths_for = {
-        mapico: 'art/planet/',
-    }
-
 
     // -------------------------------------------- export
 
@@ -30,28 +15,12 @@ function PrinceGeography(world) {
         if (!target) this.Tectonics();
         return this;
     }
-
-    // -------------------------------------------- home lord
-
-    this.dom = {};
-    this.NewHome = function() {
-        this.dom = {
-            geo:$('.WorldGeo'),
-            map:$('.WorldMap'),
-            continents:{},
-        };
-        if ( !this.HomeInspection() )
-            World.ae({msg:'DOM?',proof:this.dom});
-        return this.dom;
+    this.VisitLandmark = function(name) {
+        cc('XOXOX.VisitLandmark');
+        return this;
     }
-    this.HomeInspection = function(){
-        var inspection =
-            this.dom
-            && this.dom.geo
-            && this.dom.map
-            ? true : false ;
-        return inspection;
-    }
+
+
 
     // -------------------------------------------- display lord
 
@@ -60,7 +29,7 @@ function PrinceGeography(world) {
         this.TectonicMoveContinents();
     }
     this.TectonicBornContinents = function() {
-        var status = this.StatusManager('Tectonics');cc('tec');
+        var status = this.StatusManager('Tectonics');
         // preprocess
         if (!status.doma) this.NewHome();
         // process
@@ -106,20 +75,56 @@ function PrinceGeography(world) {
         return html;
     }
     this.domContinentalQuake = function(dom_event) {
-        // XOXO
         var kliker = $(dom_event.target);
         var name = kliker.attr('data-name');
-        Geo.dom.continents[name].zoomTo(Geo.continental_zoom);
-        cc(name);
+        Geo.VisitLandmark(name);
         evt.stopPropagation();
+    }
+
+    // -------------------------------------------- home lord
+
+    this.dom = {};
+    this.NewHome = function() {
+        this.dom = {
+            geo:$('.WorldGeo'),
+            map:$('.WorldMap'),
+            continents:{},
+        };
+        if ( !this.HomeInspection() )
+            World.ae({msg:'DOM?',proof:this.dom});
+        return this.dom;
+    }
+    this.HomeInspection = function(){
+        var inspection =
+            this.dom
+            && this.dom.geo
+            && this.dom.map
+            ? true : false ;
+        return inspection;
     }
 
     // -------------------------------------------- HQ
 
+    this.world = world;
+    this.paths_for = {
+        mapico: 'art/planet/',
+    }
     this.Relief = function() {
         var GeoDescription = this.world.GeoDescription();
         return GeoDescription.relief;
     }
+    this.continental_zoom = {
+        targetsize:1,
+        duration:320,
+        easing:'ease-out',
+        //root: $(document.body),
+        animationendcallback: null,
+        closeclick: true,
+        preservescroll: true
+    }
+
+    // ------------ Satus manager
+
     this.StatusManager = function(topic) {
         if (topic=='Tectonics') return {
             continental: !this.hasContinents(),
@@ -131,16 +136,6 @@ function PrinceGeography(world) {
     this.hasContinents = function() { return true }
     this.hasDom = function() { return this.HomeInspection() }
     this.hasWorld = function() { return this.world && this.world.name }
-    this.continental_zoom = {
-        targetsize:1,
-        duration:320,
-        easing:'ease-out',
-        //root: $(document.body),
-        animationendcallback: null,
-        closeclick: true,
-        preservescroll: true
-    }
-
 
 }
 
