@@ -14,6 +14,15 @@ function KingWorld (chromosome) {
         cc('XOXOX ResourceUpdate');
         return this;
     }
+    this.ConnectWifi = function(wifi) { 
+        this.industry.ConnectWifi(wifi); 
+        return this;
+    }
+    this.DoPayment = function(cost,official) { 
+        this.industry.DoPayment(cost,official); 
+        return this;
+    }
+
     
     // ------------ Lords
     
@@ -26,10 +35,15 @@ function KingWorld (chromosome) {
     // ------------ Services
     
     this.isAlive = function() { return this.chromosome ? true : false }
+    this.Wifi = function() { return this.wifi }
+    this.Sheep = function() { if (!this.sheep) this.sheep = 1; return this.sheep }
+    this.CheckPayment = function(cost,official) { return this.industry.CheckPayment(cost,official); }
     
     // ------------ HQ
     
     this.name = 'KingWorld';
+    this.wifi = 0; 
+    this.sheep = 1;
     this.chromosome = false;
     
     this.landmarks = {};

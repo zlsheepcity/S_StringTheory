@@ -1,6 +1,6 @@
 /* dev & programming shortcuts */
 
-function wowWow() {
+function WorldWow() {
     this.to_array = function (data,append) {
         var output = append && append.length ? append : [];
         if (data.length)
@@ -29,8 +29,11 @@ function wowWow() {
     };
     // error log
     this.aer = [];
-    this.ae = function(ae, proof) {this.aer.push({msg:ae,proof:proof});cc('AE! '+ae);};
+    this.ae = function(ae, proof) {this.aer.push({msg:ae,proof:proof});ccc([ae,proof,'===> AE! <===:o']);};
+    // report x
+    this.x = false;
 }
-var wow = new wowWow();
+var wow = new WorldWow();
 var cc = wow.cc;
 var ccc = wow.ccc;
+var x = wow.x;

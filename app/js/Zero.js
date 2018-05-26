@@ -195,19 +195,21 @@ function WorldGeoMaster() {
 // lord of current state
 
 function WorldCity(dna) {
+    
     this.name = dna && dna.name ? dna.name : 'Index City';
     this.homeplace = dna && dna.homeplace ? dna.homeplace : 'index';
     this.joblist = {};
-    
-    // ------------ Services
     
     this.Welcome = function() {
         cc('# City, welcome!');
         return this;
     }
+    
+    // ------------ JobCenter
+    
     this.TakeJob = function(job) {
         if (!job || !job.name) {
-            wow.ae({msg:'City.TakeJob:no job',proof:job});
+            wow.ae('City.TakeJob:no job',job);
             return this;
         }
         if ( this.joblist[job.name] && this.joblist[job.name].Report() ) {
@@ -217,6 +219,50 @@ function WorldCity(dna) {
         this.joblist[job.name] = new WorldJob(job);
         return this;
     }
+    this.DoJob = function(jobname) {
+        if (!jobname || !this.joblist[jobname] || !this.joblist[jobname].Report() ) {
+            wow.ae('City.DoJob:no job',jobname);
+            return this;
+        }
+        var rich = this.CheckPayment(this.joblist[jobname].cost);
+        return this;
+    }
+    
+    // ------------ Bank
+    
+    this.CheckPayment = function(dwsr_cost,official) {
+        var answer = true;
+        // dwsr_cost.d always true
+        if ( dwsr_cost.w && dwsr_cost.w*1 > World.Wifi(this.name)*1 ) answer = false;
+        if ( dwsr_cost.s && dwsr_cost.s*1 > World.Sheep(this.name)*1 ) answer = false;
+        // dwsr_cost.r is ignored
+        // official bourocracy is ignored
+        return answer;
+    }
+    this.DoPayment = function(dwsr_cost,official) {
+        if (!this.CheckPayment(dwsr_cost,official)) return false;
+        var bank_backup = {
+            w:World.Wifi(this.name),
+            s:World.Sheep(this.name),
+        };
+        // bank operations
+        if ( dwsr_cost.w && dwsr_cost.w > 0 ) World.wifi = World.wifi - 1*dwsr_cost.w;
+        if ( dwsr_cost.s && dwsr_cost.s > 0 ) World.sheep = World.sheep - 1*dwsr_cost.s;
+        // bank report
+        var bank_report = [
+            dwsr_cost, official, '- bank nackup:', bank_backup,
+            'DoPayment.report'
+        ];
+        return true;
+    }
+    this.ConnectWifi = function(wifi) {
+        if (!wifi || wifi < 1) return false;
+        // bank operations
+        World.wifi = World.wifi + 1*wifi;
+        // bank report - no reports for connections
+        return true;
+    }
+    
     
     // ------------ Born process
     
@@ -302,9 +348,11 @@ var World = new KingWorld(Chromosome);
 var Industry = World.industry;
 var Geo = World.land.geo;
 
-cc('# EOF // Call:');
-cc('  World.Welcome();');
-cc('  Industry.Tester(9,1,1);');
+ccc([
+    'World.Welcome()',
+    'Industry.Tester(9,1,1)',
+    '# EOF // AE:'+wow.aer.length
+]);
 
 // ============================= Run
 
