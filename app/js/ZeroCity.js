@@ -3,12 +3,35 @@ function WorldCity(dna) {
     this.name = dna && dna.name ? dna.name : 'Index City';
     this.homeplace = dna && dna.homeplace ? dna.homeplace : 'index';
     this.joblist = {};
+    this.products = [];
     
     this.Welcome = function() {
         cc('# City, welcome!');
         return this;
     }
-    
+
+    // ------------ ProductCenter
+
+    this.StoreProduct = function(product) {
+        this.products.push(product)
+        return this;
+    }
+    this.EmptyStorage = function() {
+        this.products = [];
+        return this;
+    }
+    this.HasProduct = function(product) {
+        var result =
+            product
+            && this.products
+            && this.products.length
+            && this.products.indexOf(product) >= 0
+            ? true
+            : false
+            ;
+        return result;
+    }
+
     // ------------ JobCenter
 
     this.DoYourJob = function() {

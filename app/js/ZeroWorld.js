@@ -7,24 +7,35 @@ function KingWorld (chromosome) {
         cc('wwwwwwwwwwwwwwwwww wwwwwwwwwwwwwww wwwwwwwwwwwwwwwwww');
         return this;
     }
-    this.ProductDelivery = function(id) {
-        cc('XOXOX ProductDelvery');
+    this.GoodMorning = function() {
+        this.industry.GoodMorning();
         return this;
     }
-    this.ResourceUpdate = function(resource,rule) {
-        cc('XOXOX ResourceUpdate');
+    this.ProductDelivery = function(product) {
+        this.industry.ProductDelivery(product);
         return this;
     }
-    this.ConnectWifi = function(wifi) { 
-        this.industry.ConnectWifi(wifi); 
+    this.ConquerResource = function(resource) {
+        this.industry.UpdateResource(resource,1);
         return this;
     }
-    this.DoPayment = function(cost,official) { 
-        this.industry.DoPayment(cost,official); 
+    this.UpdateResource = function(resource,rule) {
+        this.industry.UpdateResource(resource,rule);
+        return this;
+    }
+    this.ConnectWifi = function(wifi) {
+        this.industry.ConnectWifi(wifi);
+        return this;
+    }
+    this.DoPayment = function(cost,official) {
+        this.industry.DoPayment(cost,official);
+        return this;
+    }
+    this.YouHaveNewJob = function(jobname) {
+        this.industry.ScheduleJob(jobname);
         return this;
     }
 
-    
     // ------------ Lords
     
     this.industry = new WorldIndustry(this);
@@ -39,12 +50,31 @@ function KingWorld (chromosome) {
     this.isReady = function() { return this.city ? true : false }
     this.Wifi = function() { return this.wifi }
     this.Sheep = function() { if (!this.sheep) this.sheep = 1; return this.sheep }
-    this.CheckPayment = function(cost,official) { return this.industry.CheckPayment(cost,official); }
-    
+    this.CheckPayment = function(cost,official) {
+        return this.industry.CheckPayment(cost,official); 
+    }
+    this.StatusReport = function() {
+        var report = {
+            Day: this.day,
+            Wifi: this.Wifi(),
+            AvailableResources: this.industry.ListOfConqueredResources(),
+            CityJobs: this.MrCity() ? this.city.joblist : 'no-city',
+            CityProducts: this.MrCity() ? this.city.products : 'no-city',
+        };
+        cc('o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o StatusReport o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o');
+        for ( var report_print in report ) {
+            cc('- '+report_print+':');
+            cc(report[report_print]);
+        }
+        cc('o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o');
+        return report;
+    }
+
     // ------------ HQ
     
     this.name = 'KingWorld';
-    this.wifi = 0; 
+    this.day = 0;
+    this.wifi = 0;
     this.sheep = 1;
     this.chromosome = false;
     

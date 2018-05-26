@@ -5,6 +5,16 @@ function WorldIndustry (world) {
         cc('# Industry, welcome!');
         return this;
     }
+    this.GoodMorning = function () {
+        this.world.day++;
+        cc('============ Good Morning! Day:'+this.world.day+' ============');
+        this.MorningRoutineProcess();
+        cc('=============================================');
+        this.world.StatusReport();
+        // Finish
+        // XOXOXOX innitiative
+        return this;
+    }
     this.ApplyChromosome = function(chromosome) {
         this.ApplyChromosomeProcess(chromosome);
         return this;
@@ -15,11 +25,7 @@ function WorldIndustry (world) {
         this.world.city.TakeJob(job);
         return this;
     }
-    this.DailyJob = function(){
-        if( !this.world.MrCity() ) return wow.ae('Industry.DailyJob:no city');
-        this.world.city.DoYourJob();
-        return this;
-    }
+
     
     // ------------ Masters
     
@@ -31,18 +37,18 @@ function WorldIndustry (world) {
     }
     this.GrabResources = function () {
         var joblist = [];
+        cc('# Begin Resource Grabbing...');
         for ( var resourcename in this.world.resources )
             joblist = wow.to_array(
                 this.world.resources[resourcename].Grab(),
                 joblist
             );
-        cc();
-        cc(joblist);
         this.ResourceDelivery({joblist:joblist});
         ccc([
             'Resources → Jobs', joblist, World.city.joblist,
             'o Industry.GrabResources'
         ]);
+        return this;
     }
     this.ResourceDelivery = function(package) {
         if ( package && package.joblist )
@@ -52,9 +58,30 @@ function WorldIndustry (world) {
             this.ScheduleJob(package.job);
         return this;
     }
+    this.ProductDelivery = function(product) {
+        if(!product) return this;
+        if(!this.world.MrCity()) {wow.ae('ProductDelivery:no city');return this}
+        this.world.city.StoreProduct(product);
+        return this;
+    }
 
     // ------------ Processes
 
+    this.MorningRoutineProcess = function() {
+        if( !this.world.isAlive() || !this.world.isReady() ) {
+            cc('--- MorningRoutineProcess is broken!');
+            wow.ae('MorningRoutineProcess:no city');
+            return this;
+        }
+        // Breakfast
+        this.GrabResources();
+        // Dinner
+        this.DailyJob();
+        // Party
+        // XOXOXOX contact all
+        // XOXOXOX geo party
+        return this;
+    }
     this.ApplyChromosomeProcess = function(dna) {
         if (!dna) {wow.ae('ApplyChromosomeProcess:empty dna',dna);return this;}
         var i;
@@ -70,14 +97,22 @@ function WorldIndustry (world) {
         // jobs
         for ( i in dna.jobs )
             this.world.jobs[dna.jobs[i].name] = dna.jobs[i];
-        // city - removed to Welcome process
-        // this.BuildCity();
+        // city
+            // this.BuildCity();
+            // --> removed to Welcome process
         // finish
         this.world.chromosome = dna;
         cc('--- New chromosome from '+dna.name);
         return this;
     }
-    //XOXOXOX this.DailyJobProcess
+    this.DailyJob = function(){
+        if( !this.world.MrCity() ) return wow.ae('Industry.DailyJob:no city');
+        
+        this.world.city
+            .EmptyStorage()
+            .DoYourJob();
+        return this;
+    }
 
     // ------------ Services
 
@@ -107,6 +142,13 @@ function WorldIndustry (world) {
         wow.ae('Industry.ConnectWifi:Someone try closed bank',wifi);
         return false;
     }
+    this.ListOfConqueredResources = function() {
+        var list = [];
+        for ( var id in this.world.resources )
+            if ( !this.world.resources[id].isWild() )
+                list.push(id);
+        return list;
+    }
 
     // ------------ Resources
 
@@ -128,120 +170,7 @@ function WorldIndustry (world) {
 
     // ------------ Tester
 
-    this.Tester = function(testname,testvalues) {
-        var testpass = true;
-        var DoTest = function(test,request){
-            if (request==='all'||request===9) return true;
-            return test === request;
-        }
-        if (DoTest('Nothing',testname)) // ------------ TEMPLATE
-        {
-            if (testvalues) {
-
-            }
-            ccc([
-
-                'o Tester.Nothing o:o'
-            ]);
-            if ( false ) testpass = false;
-        }
-        if (DoTest('ApplyChromosome',testname)) // ------------ ApplyChromosome
-        {
-            if (testvalues) {
-                Industry.ApplyChromosome(Chromosome);
-            }
-            ccc([
-                '- World:', World,
-                '- Chromosome:', Chromosome,
-                '- *landmarks:', World.landmarks,
-                '- jobs:', World.jobs,
-                '- *'+World.name + '/' + Chromosome.name,
-                'o Tester.ApplyChromosome o:o'
-            ]);
-            if ( World.name != Chromosome.name ) testpass = false;
-            if ( !World.landmarks.index ) testpass = false;
-        }
-        if (DoTest('FinanceSystem',testname)) // ------------ Bank
-        {
-            var t_TestFinReport = true;
-            if (testvalues) {
-                Industry.BuildCity();
-                World.ConnectWifi(9);
-                t_TestFinReport = World.CheckPayment({w:9,s:1},'Tester') ? t_TestFinReport : false;
-                t_TestFinReport = World.industry.DoPayment({w:5,s:0},'Tester') ? t_TestFinReport : false;                
-                t_TestFinReport = World.CheckPayment({w:100500,s:0},'Tester') ? false : t_TestFinReport; 
-                t_TestFinReport = World.industry.DoPayment({w:100500,s:0},'Tester') ? false : t_TestFinReport; 
-                if ( !t_TestFinReport ) testpass = false;
-            }
-            ccc([
-                '- W:'+ World.Wifi() + ' S:'+World.Sheep(),
-                '- *CheckZeroPayment:' + World.CheckPayment({w:0,s:0},'Tester'),
-                '- *CheckMinimalPayment'+World.Sheep()+':' + World.CheckPayment({w:0,s:1},'Tester'),
-                '- '+(testvalues?'*TestFinReport is '+t_TestFinReport:'TestFinReport is off'),
-                'o Tester.FinanceSystem o:o'
-            ]);
-            if ( !World.CheckPayment({w:0,s:0},'Tester') ) testpass = false;
-            if ( !World.CheckPayment({w:0,s:1},'Tester') ) testpass = false;
-        }
-        if (DoTest('res',testname)) // ------------ Resources
-        {
-            if (testvalues) {
-                Industry.BuildCity({name:'Tester.Resources'});
-                World.resources.content.Update();
-                Industry.GrabResources();
-            }
-            var t_grabresult = World.resources.idea.Grab();
-            ccc([
-                '- *Grab idea:', t_grabresult,
-                '- Grab content:', World.resources.content.Grab(),
-                '- World resources:', World.resources,
-                '- City jobs:', World.MrCity() ? World.city.joblist : '--no city--',
-                'o Tester.Resources o:o'
-            ]);
-            if ( !t_grabresult.length ) testpass = false;
-        }
-        if (DoTest('job',testname)) // ------------ Job
-        {
-            if (testvalues) {
-                if(!World.isReady()) World.Welcome();
-                Industry
-                    .ScheduleJob('find_idea')
-                    .ScheduleJob('find_genius_idea')
-                    .ScheduleJob('grow_content');
-                World.city
-                    .DoJob('find_idea').DoJob('find_idea').DoJob('find_idea').DoJob('find_idea')
-                    .DoJob('find_idea').DoJob('find_idea').DoJob('find_idea');
-                Industry
-                    .DailyJob()
-                    .DailyJob()
-                    .ScheduleJob('grow_content')
-                    .DailyJob();
-            }
-            ccc([
-                '- City:', World.city,
-                '- Joblist', World.city.joblist,
-                'o Tester.Jobs o:o'
-            ]);
-        }
-        if (DoTest('Doma',testname)) // ------------ Doma
-        {
-            if (testvalues) {
-                Geo.FindHome();
-            }
-            var t_HomeInspector = Geo.HomeInspector();
-            ccc([
-                '- *HomeInspector was '+t_HomeInspector,
-                '- Doma is '+ Geo.Doma(),
-                'o Tester.Doma o:o'
-            ]);
-            if ( !t_HomeInspector ) testpass = false;
-        }
-
-
-        cc('AE size:'+wow.aer.length);
-        cc(wow.aer);
-        return 'Tester was '+testpass;
-    }
+    this.Tester = IndustryTester;
 
     // ------------ HQ
     

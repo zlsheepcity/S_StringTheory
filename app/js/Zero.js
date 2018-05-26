@@ -88,8 +88,9 @@ function WorldJob(dna) {
     }
     this.UpdateProgress = function() {
         if (!this.progress || !this.progress<0) return false;
-        cc('-- Work in progress for '+this.name+'.'+this.Report());
+        var before = this.progress;
         this.progress--;
+        cc('-- Work in progress for '+this.name+', '+before+' → '+this.Report());
         // Check complete
         if ( this.Report() < 1 ) {
             cc('--- job done: '+this.name);
@@ -97,6 +98,11 @@ function WorldJob(dna) {
             return 'complete';
         }
         return true;
+    }
+    this.FinishHim = function(){
+        this.progress = 1;
+        this.UpdateProgress();
+        return this;
     }
     this.Report = function() {
         return this.progress > 0 ? this.progress*1 : 0 ;
@@ -270,7 +276,8 @@ var Industry = World.industry;
 var Geo = World.land.geo;
 
 ccc([
-    'World.Welcome()',
+    'World.Welcome().GoodMorning()',
+    "Industry.Tester('life',1)",
     'Industry.Tester(9,1,1)',
     '# EOF // AE:'+wow.aer.length
 ]);

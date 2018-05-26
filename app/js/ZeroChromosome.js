@@ -51,7 +51,7 @@ function WorldChromosome() {
             cost: { d:1, w:0, s:1, r:0 },
             finish:function(){
                 cc('--- job done - content farm constructed');
-                World.ResourceUpdate({name:'content',max_lvl:1});
+                World.ConquerResource('content');
                 return true;
             }
         },
