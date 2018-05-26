@@ -29,7 +29,11 @@ function WorldWow() {
     };
     // error log
     this.aer = [];
-    this.ae = function(ae, proof) {this.aer.push({msg:ae,proof:proof});ccc([ae,proof,'===> AE! <===:o']);};
+    this.ae = function(ae, proof) {
+        this.aer.push({msg:ae,proof:proof});
+        this.ccc([ae,proof,'===> AE! <===:o']);
+        return false;
+    };
     // report x
     this.x = false;
 }

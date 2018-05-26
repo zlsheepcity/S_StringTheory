@@ -1,9 +1,10 @@
 function KingWorld (chromosome) {
 
     this.Welcome = function() {
+        cc('wwwwwwwwwwwwwwwwww World, Welcome! wwwwwwwwwwwwwwwwww');
         this.land.Welcome();
         this.industry.Welcome();
-        cc('# World, welcome!');
+        cc('wwwwwwwwwwwwwwwwww wwwwwwwwwwwwwww wwwwwwwwwwwwwwwwww');
         return this;
     }
     this.ProductDelivery = function(id) {
@@ -35,6 +36,7 @@ function KingWorld (chromosome) {
     // ------------ Services
     
     this.isAlive = function() { return this.chromosome ? true : false }
+    this.isReady = function() { return this.city ? true : false }
     this.Wifi = function() { return this.wifi }
     this.Sheep = function() { if (!this.sheep) this.sheep = 1; return this.sheep }
     this.CheckPayment = function(cost,official) { return this.industry.CheckPayment(cost,official); }
@@ -47,6 +49,7 @@ function KingWorld (chromosome) {
     this.chromosome = false;
     
     this.landmarks = {};
+    this.resources = {};
     this.jobs = {};
     
     // ============ KingWorld coronation ceremony ============

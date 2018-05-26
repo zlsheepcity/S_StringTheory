@@ -12,6 +12,58 @@
 // function WorldIndustry (world)
 // ==> ZeroIndustry.js
 
+
+// # Describe Resources
+// Resources → Jobs → Products
+
+function WorldResource(dna) {
+    this.name = dna && dna.name ? dna.name : 'dreams' ;
+    this.lvl = dna && dna.lvl ? dna.lvl : 0 ;
+    this.ai = dna && dna.ai ? dna.ai : 0 ;
+    this.homeland = dna && dna.homeland ? dna.homeland : this.name ;
+    this.production = dna && dna.production ? dna.production : [] ;
+
+    // ------------ Actions
+
+    this.Grab = function() {
+        this.Ai();
+        if (this.isWild()) return false;
+        return this.DoGenerateJoblist();
+    };
+    this.Update = function(limit){
+        if ( limit && limit <= this.lvl ) return this;
+        this.lvl++;
+        cc('--- Resource updated: '+this.name+'.'+this.lvl);
+        return this;
+    }
+    this.Destroy = function(){
+        this.lvl = 0;
+        return this;
+    };
+    this.DoGenerateJoblist = function(){
+        var production = this.production;
+        var joblist = [], all;
+        for ( all in production )
+            if ( this.DoVerifyJob(production[all]) )
+                joblist.push(production[all].job);
+        return joblist.length ? joblist : false ;
+    };
+    this.DoVerifyJob = function(job) {
+        if (!job||!job.job) return false;
+        if ( job.min_lvl && job.min_lvl>this.lvl ) return false;
+        if ( job.max_lvl && job.max_lvl<this.lvl ) return false;
+        return true;
+    }
+
+    // ------------ Services
+
+    this.isWild = function() {
+        return this.lvl ? false : true ;
+    }
+    this.Ai = function(x) {return ++this.ai}
+
+}
+
 // # Describe Job
 // Resources → Jobs → Products
 
@@ -24,8 +76,8 @@ function WorldJob(dna) {
         r: dna && dna.cost && dna.cost.r ? dna.cost.r : false,
     }
     this.progress = 0;
-    this.start = dna && dna.start ? dna.start : false ;
-    this.finish = dna && dna.finish ? dna.finish : false ;
+    this.start = dna && dna.start ? dna.start : function(){return false} ;
+    this.finish = dna && dna.finish ? dna.finish : function(){return false} ;
     this.dna = dna;
     
     // ------------ Services
@@ -35,12 +87,19 @@ function WorldJob(dna) {
         return this;
     }
     this.UpdateProgress = function() {
+        if (!this.progress || !this.progress<0) return false;
+        cc('-- Work in progress for '+this.name+'.'+this.Report());
         this.progress--;
-        // XOXOXOX Check complete
-        return this;
+        // Check complete
+        if ( this.Report() < 1 ) {
+            cc('--- job done: '+this.name);
+            this.finish();
+            return 'complete';
+        }
+        return true;
     }
     this.Report = function() {
-        return this.progress;
+        return this.progress > 0 ? this.progress*1 : 0 ;
     }
     
     // ------------ On register
@@ -194,152 +253,14 @@ function WorldGeoMaster() {
 // third prince of the World
 // lord of current state
 
-function WorldCity(dna) {
-    
-    this.name = dna && dna.name ? dna.name : 'Index City';
-    this.homeplace = dna && dna.homeplace ? dna.homeplace : 'index';
-    this.joblist = {};
-    
-    this.Welcome = function() {
-        cc('# City, welcome!');
-        return this;
-    }
-    
-    // ------------ JobCenter
-    
-    this.TakeJob = function(job) {
-        if (!job || !job.name) {
-            wow.ae('City.TakeJob:no job',job);
-            return this;
-        }
-        if ( this.joblist[job.name] && this.joblist[job.name].Report() ) {
-            cc('--- Already in progress '+job.name);
-            return this;
-        }             
-        this.joblist[job.name] = new WorldJob(job);
-        return this;
-    }
-    this.DoJob = function(jobname) {
-        if (!jobname || !this.joblist[jobname] || !this.joblist[jobname].Report() ) {
-            wow.ae('City.DoJob:no job',jobname);
-            return this;
-        }
-        var rich = this.CheckPayment(this.joblist[jobname].cost);
-        return this;
-    }
-    
-    // ------------ Bank
-    
-    this.CheckPayment = function(dwsr_cost,official) {
-        var answer = true;
-        // dwsr_cost.d always true
-        if ( dwsr_cost.w && dwsr_cost.w*1 > World.Wifi(this.name)*1 ) answer = false;
-        if ( dwsr_cost.s && dwsr_cost.s*1 > World.Sheep(this.name)*1 ) answer = false;
-        // dwsr_cost.r is ignored
-        // official bourocracy is ignored
-        return answer;
-    }
-    this.DoPayment = function(dwsr_cost,official) {
-        if (!this.CheckPayment(dwsr_cost,official)) return false;
-        var bank_backup = {
-            w:World.Wifi(this.name),
-            s:World.Sheep(this.name),
-        };
-        // bank operations
-        if ( dwsr_cost.w && dwsr_cost.w > 0 ) World.wifi = World.wifi - 1*dwsr_cost.w;
-        if ( dwsr_cost.s && dwsr_cost.s > 0 ) World.sheep = World.sheep - 1*dwsr_cost.s;
-        // bank report
-        var bank_report = [
-            dwsr_cost, official, '- bank nackup:', bank_backup,
-            'DoPayment.report'
-        ];
-        return true;
-    }
-    this.ConnectWifi = function(wifi) {
-        if (!wifi || wifi < 1) return false;
-        // bank operations
-        World.wifi = World.wifi + 1*wifi;
-        // bank report - no reports for connections
-        return true;
-    }
-    
-    
-    // ------------ Born process
-    
-    cc('--- New City '+this.name);
-}
+    // function WorldCity(dna)
+    // ==> ZeroCity.js
 
 // # Describe the Chromosome
 // Initial data base
 
-function WorldChromosome() {
-    this.name = 'Index World';
-    this.landmarks =  [
-        { name:'index' },
-        { name:'kanban' },
-        { name:'content' },
-        { name:'index_valley' },
-        { name:'content_fields' },
-        { name:'router_lakes' },
-        { name:'header_mountains' },
-    ];
-    this.resources = [
-        {
-            name:'idea',
-            production:[
-                { job:'find_idea', min_lvl:1,max_lvl:false },
-                { job:'find_genius_idea', min_lvl:1,max_lvl:false },
-            ],
-        },
-        {
-            name:'content',
-            production:[
-                { job:'grow_content', min_lvl:1,max_lvl:false },
-            ],
-        },
-    ];
-    this.jobs = [
-        {
-            name:'find_idea',
-            cost: { d:7, w:0, s:0, r:0 },
-            finish:function(){
-                cc('--- job done - new idea!');
-                World.ProductDelivery('idea', {job:'find_idea'});
-                return true;
-            }
-        },
-        {
-            name:'find_genius_idea',
-            cost: { d:31, w:0, s:0, r:0 },
-            finish:function(){
-                cc('--- job done - new genius idea!');
-                World.ProductDelivery('genius_idea', {job:'find_genius_idea'});
-                return true;
-            }
-        },
-        {
-            name:'construct_content_farm',
-            cost: { d:1, w:0, s:1, r:0 },
-            finish:function(){
-                cc('--- job done - content farm constructed');
-                World.ResourceUpdate({name:'content',max_lvl:1});
-                return true;
-            }
-        },
-        {
-            name:'grow_content',
-            cost: { d:1, w:0, s:0, r:0 },
-            finish:function(){
-                cc('--- job done - new content');
-                World.ProductDelivery('content', {job:'grow_content'});
-                return true;
-            }
-        },
-    ];
-    this.city = {
-        name:'index'
-    };
-}
+    // function WorldChromosome()
+    // ==> ZeroChromosome.js
 
 // ============================= Browser initiation
 
