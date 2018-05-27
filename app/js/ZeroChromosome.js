@@ -9,6 +9,39 @@ function WorldChromosome() {
         { name:'router_lakes' },
         { name:'header_mountains' },
     ];
+    this.contacts = [
+        {
+            name:'roof',
+            lvl:1,
+            trade_questions:[
+                {
+                    name:'choose_idea',
+                    min_lvl:1, max_lvl:false,
+                    answer: function(){
+                        if ( World.city.HasProduct('idea') )
+                            cc('# The Roof presents new idea XOXOXOX!');
+                    }
+                }
+            ],
+        },
+        {
+            name:'kanban',
+            lvl:1,
+        },
+        {
+            name:'seobot1',
+            lvl:1,
+            trade_questions:[
+                {
+                    name:'trade_wild_content',
+                    min_lvl:1, max_lvl:false,
+                    answer: function(){
+                        World.city.TradeProduct('content',{wifi:1});
+                    }
+                }
+            ],
+        },
+    ],
     this.resources = [
         {
             name:'idea',

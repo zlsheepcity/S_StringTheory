@@ -20,6 +20,13 @@ function WorldWow() {
         };
         return baby;
     };
+    this.lvlPass = function(lvl,passport) {
+        if (!lvl) return false;
+        if (!passport) return true;
+        if (passport.min_lvl && passport.min_lvl>lvl) return false;
+        if (passport.max_lvl && passport.max_lvl<lvl) return false;
+        return true;
+    }
     // dev log
     this.cc = function(log) { console.log(log); };
     this.ccc = function(log) {

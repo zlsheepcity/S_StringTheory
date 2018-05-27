@@ -32,6 +32,18 @@ function WorldCity(dna) {
         return result;
     }
 
+    // ------------ TradeCenter
+
+    this.TradeProduct(product,price) {
+        if( !this.HasProduct(product) ) {
+            cc('--- No trade for '+product);
+            return this;
+        }
+        var wifi = price && price.wifi ? price.wifi : 0 ;
+        this.ConnectWifi(wifi,{reason:'TradeProduct',product:product});
+        return this;
+    }
+
     // ------------ JobCenter
 
     this.DoYourJob = function() {
@@ -98,7 +110,7 @@ function WorldCity(dna) {
         ];
         return {confirmed:true,dwsr_cost:dwsr_cost,official:official};
     }
-    this.ConnectWifi = function(wifi) {
+    this.ConnectWifi = function(wifi,official) {
         if (!wifi || wifi < 1) return false;
         // bank operations
         World.wifi = World.wifi + 1*wifi;

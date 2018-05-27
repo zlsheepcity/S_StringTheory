@@ -37,12 +37,11 @@ function KingWorld (chromosome) {
     }
 
     // ------------ Lords
-    
+
     this.industry = new WorldIndustry(this);
     this.land = new WorldLandlord(this);
     this.city = false;
     this.MrCity = function(){ return this.city; };
-    
 
     // ------------ Services
     
@@ -81,6 +80,7 @@ function KingWorld (chromosome) {
     this.landmarks = {};
     this.resources = {};
     this.jobs = {};
+    this.contacts = {};
     
     // ============ KingWorld coronation ceremony ============
    

@@ -262,6 +262,24 @@ function WorldGeoMaster() {
     // function WorldCity(dna)
     // ==> ZeroCity.js
 
+// # Describe the Network
+// npc contacts
+
+function NetworkContact(dna) {
+    this.name = dna && dna.name ? dna.name : 'seobot0';
+    this.lvl = dna && dna.lvl ? dna.lvl : 0;
+    this.trade_questions = dna && dna.trade_questions ? dna.trade_questions : [];
+
+    this.TradeCall = function() {
+        for ( var i in this.trade_questions )
+            if ( lvlPass.lvlPass(this.lvl,this.trade_questions[i]) )
+                if ( typeof this.trade_questions[i].answer === 'function' )
+                    this.trade_questions[i].answer();
+    }
+    this.isAlive = function() { return this.lvl ? true : false }
+    this.lvlPass = wow.lvlPass; // check min and max allowed level
+}
+
 // # Describe the Chromosome
 // Initial data base
 

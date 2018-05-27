@@ -97,9 +97,13 @@ function WorldIndustry (world) {
         // jobs
         for ( i in dna.jobs )
             this.world.jobs[dna.jobs[i].name] = dna.jobs[i];
+            // jobs without registration? ewh...
         // city
             // this.BuildCity();
             // --> removed to Welcome process
+        // contacts
+        for ( i in dna.contacts )
+            this.ContactRegistration(dna.contacts[i]);
         // finish
         this.world.chromosome = dna;
         cc('--- New chromosome from '+dna.name);
@@ -148,6 +152,12 @@ function WorldIndustry (world) {
             if ( !this.world.resources[id].isWild() )
                 list.push(id);
         return list;
+    }
+
+    // ------------ Contacts
+
+    this.ContactRegistration(dna) {
+        
     }
 
     // ------------ Resources
