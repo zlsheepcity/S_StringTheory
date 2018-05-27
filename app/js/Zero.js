@@ -272,9 +272,10 @@ function NetworkContact(dna) {
 
     this.TradeCall = function() {
         for ( var i in this.trade_questions )
-            if ( lvlPass.lvlPass(this.lvl,this.trade_questions[i]) )
+            if ( wow.lvlPass(this.lvl,this.trade_questions[i]) )
                 if ( typeof this.trade_questions[i].answer === 'function' )
                     this.trade_questions[i].answer();
+        return this;
     }
     this.isAlive = function() { return this.lvl ? true : false }
     this.lvlPass = wow.lvlPass; // check min and max allowed level
@@ -292,9 +293,12 @@ var Chromosome = new WorldChromosome();
 var World = new KingWorld(Chromosome);
 var Industry = World.industry;
 var Geo = World.land.geo;
+var tt = Industry.Tester;
 
 ccc([
-    'World.Welcome().GoodMorning()',
+    '===> Commands will serve you:',
+    'World.GoodMorning()',
+    "World.ConquerResource('content')",
     "Industry.Tester('life',1)",
     'Industry.Tester(9,1,1)',
     '# EOF // AE:'+wow.aer.length

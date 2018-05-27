@@ -34,14 +34,13 @@ function WorldCity(dna) {
 
     // ------------ TradeCenter
 
-    this.TradeProduct(product,price) {
+    this.TradeProduct = function(product,price) {
         if( !this.HasProduct(product) ) {
             cc('--- No trade for '+product);
-            return this;
+            return false;
         }
         var wifi = price && price.wifi ? price.wifi : 0 ;
-        this.ConnectWifi(wifi,{reason:'TradeProduct',product:product});
-        return this;
+        return this.ConnectWifi(wifi,{reason:'TradeProduct',product:product});
     }
 
     // ------------ JobCenter

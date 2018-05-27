@@ -36,7 +36,8 @@ function WorldChromosome() {
                     name:'trade_wild_content',
                     min_lvl:1, max_lvl:false,
                     answer: function(){
-                        World.city.TradeProduct('content',{wifi:1});
+                        if ( World.city.TradeProduct('content',{wifi:1}) )
+                            cc('-- content for wifi, 1x1 [seobot1]');
                     }
                 }
             ],

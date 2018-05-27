@@ -5,9 +5,17 @@ function KingWorld (chromosome) {
         this.land.Welcome();
         this.industry.Welcome();
         cc('wwwwwwwwwwwwwwwwww wwwwwwwwwwwwwww wwwwwwwwwwwwwwwwww');
+        this.day = 0; // zero day party
         return this;
     }
     this.GoodMorning = function() {
+        if (this.day<0) this.Welcome();
+        this.industry.GoodMorning();
+        return this;
+    }
+    this.GoodNight = function() {
+        if (this.day<0) this.Welcome();
+        // Zzz.. Zzz..
         this.industry.GoodMorning();
         return this;
     }
@@ -54,15 +62,14 @@ function KingWorld (chromosome) {
     }
     this.StatusReport = function() {
         var report = {
-            Day: this.day,
-            Wifi: this.Wifi(),
+            StatusReport: 'Day:'+this.day + ', Wifi:' + this.Wifi()+ ', Sheep:' + this.Sheep(),
             AvailableResources: this.industry.ListOfConqueredResources(),
             CityJobs: this.MrCity() ? this.city.joblist : 'no-city',
             CityProducts: this.MrCity() ? this.city.products : 'no-city',
         };
-        cc('o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o StatusReport o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o');
+        cc('o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o');
         for ( var report_print in report ) {
-            cc('- '+report_print+':');
+            cc('> '+report_print+' <');
             cc(report[report_print]);
         }
         cc('o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o⋅o');
@@ -72,7 +79,7 @@ function KingWorld (chromosome) {
     // ------------ HQ
     
     this.name = 'KingWorld';
-    this.day = 0;
+    this.day = -1;
     this.wifi = 0;
     this.sheep = 1;
     this.chromosome = false;
@@ -90,5 +97,5 @@ function KingWorld (chromosome) {
         'alive: '+this.isAlive(),
         'o New World was born == o =='
     ]);
-
+    this.StatusReport();
 }

@@ -25,11 +25,13 @@ var IndustryTester = function(testname,testvalues) {
             '- Chromosome:', Chromosome,
             '- *landmarks:', World.landmarks,
             '- jobs:', World.jobs,
+            '- contacts:', World.contacts,
             '- *'+World.name + '/' + Chromosome.name,
             'o Tester.ApplyChromosome o:o'
         ]);
         if ( World.name != Chromosome.name ) testpass = false;
         if ( !World.landmarks.index ) testpass = false;
+        if ( !World.contacts.roof ) testpass = false;
     }
     if (DoTest('FinanceSystem',testname)) // ------------ Bank
     {
@@ -166,7 +168,25 @@ var IndustryTester = function(testname,testvalues) {
         ]);
         if ( false ) testpass = false;
     }
+    if (DoTest('call',testname)) // ------------ TEMPLATE
+    {
+        if (testvalues) {
+            World.city.StoreProduct('idea');
+            World.contacts.roof.trade_questions[0].answer();
+            World.city.EmptyStorage();
+            
+            cc('# PartyTrade Test');
+            World.industry.PartyTrade();
+            World.city.StoreProduct('content');
+            World.industry.PartyTrade();
+            
+        }
+        ccc([
 
+            'o Tester.contacts o:o'
+        ]);
+        if ( false ) testpass = false;
+    }
 
     cc('AE size:'+wow.aer.length);
     cc(wow.aer);

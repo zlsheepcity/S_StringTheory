@@ -1,7 +1,7 @@
 function WorldIndustry (world) {
 
     this.Welcome = function() {
-        this.BuildCity(this.world.chromosome.city);
+        this.world.MrCity().Welcome();
         cc('# Industry, welcome!');
         return this;
     }
@@ -32,7 +32,6 @@ function WorldIndustry (world) {
     this.BuildCity = function(dna){
         if(dna==='AnyIfNot' && this.world.city && this.world.city.name) return false;
         this.world.city = new WorldCity(dna);
-        this.world.MrCity().Welcome();
         return this;
     }
     this.GrabResources = function () {
@@ -78,7 +77,7 @@ function WorldIndustry (world) {
         // Dinner
         this.DailyJob();
         // Party
-        // XOXOXOX contact all
+        this.PartyTrade();
         // XOXOXOX geo party
         return this;
     }
@@ -99,8 +98,7 @@ function WorldIndustry (world) {
             this.world.jobs[dna.jobs[i].name] = dna.jobs[i];
             // jobs without registration? ewh...
         // city
-            // this.BuildCity();
-            // --> removed to Welcome process
+             this.BuildCity();
         // contacts
         for ( i in dna.contacts )
             this.ContactRegistration(dna.contacts[i]);
@@ -111,7 +109,6 @@ function WorldIndustry (world) {
     }
     this.DailyJob = function(){
         if( !this.world.MrCity() ) return wow.ae('Industry.DailyJob:no city');
-        
         this.world.city
             .EmptyStorage()
             .DoYourJob();
@@ -156,8 +153,16 @@ function WorldIndustry (world) {
 
     // ------------ Contacts
 
-    this.ContactRegistration(dna) {
-        
+    this.ContactRegistration = function(dna) {
+        this.world.contacts[dna.name] = new NetworkContact(dna);
+        return this;
+    }
+    this.PartyTrade = function(){
+        cc('# Trades are open. Calling contacts...');
+        for ( var id in this.world.contacts )
+            this.world.contacts[id].TradeCall();
+        cc('# ________ trades are closed ________');
+        return this;
     }
 
     // ------------ Resources
