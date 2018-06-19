@@ -1,74 +1,210 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
-<!-- frontent settings 12з.4001 app4K -->
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <!--
+        CITE:
+        The following 2 meta tags *must* come first in the <head>
+        to consistently ensure proper document rendering.
+        Any other head element should come *after* these tags.
+    -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- =================================================== ?????  -->
-<!-- =================================================== [HEAD CONTENT] -->
+<!--<divider>==========================================< ʕ⊙ᴥ⊙ʔ >-->
 
-<title>TechCore</title>
-<meta name="description" content="js lib" />
-<meta name="author" content="zl-12з" />
+    <title>Code</title>
+    <meta name="description" content="Опера в коде: Долина индекса — Сценарий для браузеров, написанный на ECMAScript 2015. В начале сюжета: рождение мира, подключение функций, выращивание контента..." />
+    <meta name="author" content="ZL" />
+    <meta name="date" content="2018.6.19" />
 
-<!-- =================================================== ?????  -->
-<!-- =================================================== [HEAD ENGINE] -->
+<!--<divider>==========================================< ʕ⊙ᴥ⊙ʔ >-->
 
-<!-- ## critical CSS -->
+    <!--
+        ОРКЕСТРОМ ДИРИЖИРУЕТ БРАУЗЕР
+    -->
 
-<style>
-    img {
-        max-width: 100%;
-    }
-</style>
+    <!-- Презентация музыкантов -->
 
-<!-- ## CSS -->
+    <!-- babel, конвертирует код ECMAScript в обычный javascript для браузера -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
+    <!-- vue, отдаёт команды визуальным декорациям -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 
+    <!-- специальный переводчик для браузеров от microsoft -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
-<!-- ## JS -->
+<!--<divider>==========================================< ʕ⊙ᴥ⊙ʔ >-->
 
-<!-- lib --><script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-<!-- lib --><script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <!--
+        ХУДОЖЕСТВЕННОЕ ОФОРМЛЕНИЕ: GeneralArtist.css
+        описывает облик html декораций
+    -->
+    <link href="world/GeneralArtist.css" rel="stylesheet"  media="all" />
 
-<!-- ## custom settings below-->
+    <!--
+        СЦЕНАРИЙ: Chromosome.js
+        в файле описан мир в момент рождения
+    -->
+    <script src="world/Chromosome.js"></script>
+
+    <!--
+        САМЫЙ ГЛАВНЫЙ: GeneralDirector.js
+        запускает ангелов, которые следят за процессом
+    -->
+    <script src="world/GeneralDirector.js"></script>
+
+<!--<divider>==========================================< ʕ⊙ᴥ⊙ʔ >-->
+
 
 </head>
-<!-- =================================================== ?????  -->
-<!-- =================================================== [NECK] -->
-<body class="World">
+
+<!-- В зале гаснет свет, открывается BODY -->
+
+<body>
+
+<!--
+    Визуальные декорации построены внутри html тега с классом WorldMap
+-->
+
+<main class="WorldMap">
+    
+</main>
+
+<!-- Начинается сюжет в коде -->
+
+<script type="text/babel">
+
+/*  ****************************************************************************
+    ГЛАВА 1
+    Рождение короля и первых принцев
+    **************************************************************************** */
+
+// В этом мире правит король World
+
+function KingWorld() {
+
+    // Описание короля
+
+    this.chromosome = false;
+    this.name = 'NewbornWorld'; // имя - признак существования
+    this.age = 0;                // возраст - признак видимости, 0=невидимый
+
+    // Публичное общение с королём
+
+    this.Welcome = function() {
+        Radio.m('Welcome world, '+this.name+'!');
+        return this;
+    };
+
+};
+
+// Рождение короля
+
+let World = new KingWorld();
+Radio.d('New King was born', World);
+
+// В этом мире королю помогают принцы
+// Их несколько, у каждого свои конкретные обязанности
+
+// Принц Evolution отвечает за процессы развития
+
+function PrinceEvolution(world) {
+
+    this.world = world;
+
+    this.Aging = function() {
+        this.world.age++
+        return this;
+    };
+
+    this.ApplyChromosome = function(chromosome) {
+        const wDNA = chromosome.worldDNA;
+        this.world.name = wDNA.name;
+        this.world.age = wDNA.age;
+        this.world.chromosome = chromosome;
+        return this;
+    };
+
+};
+
+// Принц LandLord хранит географическую информацию и рисует её на экране
+
+function PrinceLandLord(world) {
+
+    this.world = world;
+
+};
+
+/*  ****************************************************************************
+    ГЛАВА 2
+    Коронация
+    **************************************************************************** */
+
+// Во время коронации все жители просыпаются и готовятся к работе.
+
+// Коронация описывает пошаговый регламент для короля и принцев.
+// Генерирует белый шум в радиоэфире в случае успешной коронации.
+
+World.Coronation = function() {
+
+    // #CoronationRule.1 Рождение принцев внутри короля
+
+    this.Evolution = new PrinceEvolution(World);
+    this.LandLord = new PrinceLandLord(World);
+
+    // #CoronationRule.2 Принятие хромосомы
+
+    const chromosome = new WorldChromosome();
+    this.Evolution.ApplyChromosome(chromosome);
+
+    // #CoronationRule.3 конец коронации
+
+    Radio.m('White noise! Coronation!');
+    return this;
+}
+
+// Коронация
+
+World.Coronation();
 
 
-<!-- =================================================== ?????  -->
-<!-- =================================================== [CONTENT START] -->
 
-<div id="output"></div>
-<!-- Load Babel -->
+// Lands занимаются географием местности
+// 
+// - На землях стоят Landmarks, производят события и ресурсы
 
+// Рождение принцев внутри короля
+
+
+//Radio.d('Kids are born', World);
+
+//
+
+
+
+</script>
+
+
+<div id="BabelOutput"></div>
 <!-- Your custom script here -->
 <script type="text/babel">
-const getMessage = () => "Hello World";
-document.getElementById('output').innerHTML = getMessage();
+// welcome, babel
+const getMessage = () => "Babel, welcome!";
+document.getElementById('BabelOutput').innerHTML = getMessage();
+// welcome, vue
 const vueWorldMap = new Vue({
   el: '.WorldMap'
 });
 </script>
 
 
-
-<div class="WorldMap">
-
-</div>
-
-
 <!-- =================================================== [CONTENT END] -->
-<!-- =================================================== ?????  -->
+<!-- =================================================== ʕ⊙ᴥ⊙ʔ  -->
 
 
 
-<!-- =================================================== ?????  -->
+<!-- =================================================== ʕ⊙ᴥ⊙ʔ  -->
 <!-- =================================================== [GROUND] -->
 
 
