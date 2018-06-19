@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- frontent settings 12з.4001 app4K -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+
+<!-- =================================================== ?????  -->
+<!-- =================================================== [HEAD CONTENT] -->
+
+<title>TechCore</title>
+<meta name="description" content="js lib" />
+<meta name="author" content="zl-12з" />
+
+<!-- =================================================== ?????  -->
+<!-- =================================================== [HEAD ENGINE] -->
+
+<!-- ## critical CSS -->
+
+<style>
+    img {
+        max-width: 100%;
+    }
+</style>
+
+<!-- ## CSS -->
+
+
+
+<!-- ## JS -->
+
+<!-- lib --><script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<!-- lib --><script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+<!-- ## custom settings below-->
+
+</head>
+<!-- =================================================== ?????  -->
+<!-- =================================================== [NECK] -->
+<body class="World">
+
+
+<!-- =================================================== ?????  -->
+<!-- =================================================== [CONTENT START] -->
+
+<div id="output"></div>
+<!-- Load Babel -->
+
+<!-- Your custom script here -->
+<script type="text/babel">
+const getMessage = () => "Hello World";
+document.getElementById('output').innerHTML = getMessage();
+const vueWorldMap = new Vue({
+  el: '.WorldMap'
+});
+</script>
+
+
+
+<div class="WorldMap">
+
+</div>
+
+
+<!-- =================================================== [CONTENT END] -->
+<!-- =================================================== ?????  -->
+
+
+
+<!-- =================================================== ?????  -->
+<!-- =================================================== [GROUND] -->
+
+
+</body>
+</html>

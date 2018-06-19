@@ -3,6 +3,11 @@ game about web development
 
 # Log
 
+##  new subproject hi tech
+    2018.6.19
+    folder: /tech/
+
+
 - first code 2018.5.12
 - first world 2018.5.14
 - autoplay was born 2018.5.14.2
