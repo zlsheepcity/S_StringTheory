@@ -77,12 +77,12 @@
 
 /*  ****************************************************************************
     ГЛАВА 1
-    Рождение короля и первых принцев
+    Рождение короля
     **************************************************************************** */
 
 // В этом мире правит король World
 
-function KingWorld() {
+function KingOfWorld() {
 
     // Описание короля
 
@@ -90,28 +90,62 @@ function KingWorld() {
     this.name = 'NewbornWorld'; // имя - признак существования
     this.age = 0;                // возраст - признак видимости, 0=невидимый
 
-    // Публичное общение с королём
-
-    this.Welcome = function() {
-        Radio.m('Welcome world, '+this.name+'!');
-        return this;
-    };
-
 };
 
-// Рождение короля
+// Рождение короля по имени World
 
-let World = new KingWorld();
-Radio.d('New King was born', World);
+let World = new KingOfWorld();
 
-// В этом мире королю помогают принцы
-// Их несколько, у каждого свои конкретные обязанности
+/*  ****************************************************************************
+    ГЛАВА 2
+    Подготовка к коронации и церемония
+    **************************************************************************** */
+    
+// Мистер Коронация описывает пошаговый регламент коронации.
+// Коронация генерирует белый шум в радиоэфире в случае успешной коронации.
 
-// Принц Evolution отвечает за процессы развития
+World.mrCoronation = function() {
 
-function PrinceEvolution(world) {
+    // #CoronationRule.1 Рождение принцев внутри короля
+        
+    this
+        .mrMitosis('Evolution', PrinceOfEvolution)
+        .mrMitosis('Geo', PrinceOfGeography)
+        .mrMitosis('City', PrincessOfCity)
+        ;
+
+    // #CoronationRule.2 Принятие хромосомы
+
+    const chromosome = new WorldChromosome(); // Выделяется хромосома.
+    this.Evolution.ApplyChromosome(chromosome); // Старший принц Evolution применяет хромосому на короля
+
+    // #CoronationRule.3 конец коронации
+
+    Radio.r('White noise! Coronation!',{world:this});
+    return this;
+}
+
+// В этом мире королю помогают принцы.
+// Их несколько, у каждого свои конкретные обязанности.
+// Мистер Митоз во время коронации присваивает принцу имя, регистрирует и привязывает к королю.
+
+World.registered_kidnames = [];
+World.mrMitosis = function(name,role) {
+    this[name] = new role(World);
+    this.registered_kidnames.push(name);
+    return this;
+};
+
+// PrinceOfEvolution отвечает за процессы развития
+
+function PrinceOfEvolution(world) {
 
     this.world = world;
+    
+    this.Welcome = function() {
+        Radio.m('Welcome Evolution the PrinceOfEvolution!');
+        return this;
+    };
 
     this.Aging = function() {
         this.world.age++
@@ -119,54 +153,81 @@ function PrinceEvolution(world) {
     };
 
     this.ApplyChromosome = function(chromosome) {
+        this.world.chromosome = chromosome;
         const wDNA = chromosome.worldDNA;
         this.world.name = wDNA.name;
         this.world.age = wDNA.age;
-        this.world.chromosome = chromosome;
         return this;
     };
 
 };
 
-// Принц LandLord хранит географическую информацию и рисует её на экране
+// PrinceOfGeography хранит географическую информацию и рисует её на экране
 
-function PrinceLandLord(world) {
+function PrinceOfGeography(world) {
 
     this.world = world;
+    
+    this.Welcome = function() {
+        Radio.m('Welcome Geo the PrinceOfGeography!');
+        return this;
+    };
 
 };
 
-/*  ****************************************************************************
-    ГЛАВА 2
-    Коронация
-    **************************************************************************** */
+// PrincessOfCity — представитель юзера.
+// Принцесса хранит богатства, контролирует производство и реализацию произведённого.
 
-// Во время коронации все жители просыпаются и готовятся к работе.
+function PrincessOfCity(world) {
 
-// Коронация описывает пошаговый регламент для короля и принцев.
-// Генерирует белый шум в радиоэфире в случае успешной коронации.
-
-World.Coronation = function() {
-
-    // #CoronationRule.1 Рождение принцев внутри короля
-
-    this.Evolution = new PrinceEvolution(World);
-    this.LandLord = new PrinceLandLord(World);
-
-    // #CoronationRule.2 Принятие хромосомы
-
-    const chromosome = new WorldChromosome();
-    this.Evolution.ApplyChromosome(chromosome);
-
-    // #CoronationRule.3 конец коронации
-
-    Radio.m('White noise! Coronation!');
-    return this;
+    this.world = world;    
+    this.name = 'index_city';
+    
+    this.Welcome = function() {
+        Radio.m('Welcome City the PrincessOfCity!');
+        return this;
+    };
+    
+    // Свадьба принцессы — это единение с юзером.
+    // Во время свадьбы принцесса меняет имя.
+    
+    this.Marriage = function(new_passport) {
+        this.name = new_passport.name;
+        return this;
+    };
+    
 }
 
-// Коронация
 
-World.Coronation();
+// После коронации все принцы приглашаются на вечеринку.
+// Во время приглашения принцы призывают собственных лордов.
+// Запускают жизненные процессы и приходят на вечеринку готовые к работе.
+// После вечеринки весь мир готов к новым приключениям
+
+World.mrWelcomeParty = function() {
+    for ( let everyone in this.registered_kidnames )
+        this[this.registered_kidnames[everyone]].Welcome();
+    Radio.r('Welcome party completed!',{guests:this.registered_kidnames,world:this});
+    return this;
+};
+
+
+// Церемония коронации
+
+World
+    .mrCoronation()
+    .mrWelcomeParty()
+    ;
+
+
+    
+    
+Radio.pause();
+Radio.d('Last World',World);
+Radio.pause();
+
+// ============================================================== END OF THE WORLD
+
 
 
 
@@ -180,8 +241,19 @@ World.Coronation();
 //Radio.d('Kids are born', World);
 
 //
+/*
+    // #CoronationRule.2 Приглашение принцев
+    // Во время приглашения принцы призывают собственных лордов
+    // И приходят в статусе «готов работать»
+    
+    // Публичное общение с королём
 
-
+    this.Welcome = function() {
+        Radio.m('Welcome '+this.name+' the KingOfWorld!');
+        return this;
+    };
+    
+*/
 
 </script>
 
