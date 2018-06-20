@@ -1,9 +1,7 @@
 <!doctype html>
 <html lang="ru">
+<!-- Открывается HEAD. Это вступление к опере. -->
 <head>
-    <!--
-        Открывается HEAD. Это вступление к опере.
-    -->
     <!--
         CITE:
         The following 2 meta tags *must* come first in the <head>
@@ -15,8 +13,12 @@
 
 <!--<divider>==========================================< ʕ⊙ᴥ⊙ʔ >-->
 
-    <title>Code</title>
-    <meta name="description" content="Опера в коде: Долина индекса — Сценарий для браузеров, написанный на ECMAScript 2015. В начале сюжета: рождение мира, подключение функций, выращивание контента..." />
+    <!--
+        ОПИСАНИЕ
+    -->
+
+    <title>Code</title><!-- Долина индекса — пьеса в асинхронном коде -->
+    <meta name="description" content="Это пьеса для браузеров на языке ECMAScript 2015. В начале сюжета: рождение мира, подключение функций, выращивание контента... И код и результат выполнения кода являются героями пьесы." />
     <meta name="author" content="ZL" />
     <meta name="date" content="2018.6.19" />
 
@@ -72,26 +74,24 @@
 
 <!-- Открываются декорации мира. -->
 
-<main class="WorldMap">
+<main class="World">
 
-<!-- Начинается сюжет в коде -->
-
-<script type="text/babel">
+<!--
 /* ****************************************************************************
    ЭПИЗОД I.
    Создание мира и рождение короля
    **************************************************************************** */
+   -->
+
+<script type="text/babel">
+
 Radio.chapter('Episode I');
 
 // В этом мире правит король
 
 function KingOfWorld(name) {
-
-    // Описание короля
-
     this.name = name; // имя - признак существования
     this.age = 0;     // возраст - признак видимости, 0=невидимый
-
 };
 
 // В этом мире королю помогают принцы.
@@ -100,25 +100,23 @@ function KingOfWorld(name) {
 // PrinceOfEvolution отвечает за процессы развития
 
 function PrinceOfEvolution(name) {
-
     this.name = name;
-
+    this.age = 0;
 };
 
 // PrinceOfGeography хранит географическую информацию и превращает её в графическую.
 
 function PrinceOfGeography(name) {
-
     this.name = name;
-
+    this.age = 0;
 };
 
 // PrincessOfCity - представитель юзера.
 // Город хранит богатства, контролирует производство и реализацию произведённого.
 
 function PrincessOfCity(name) {
-
     this.name = name;
+    this.age = 0;
     this.label = 'Index City'; // юмя принцессы для юзера
 
     // Свадьба принцессы - это единение с юзером.
@@ -129,12 +127,10 @@ function PrincessOfCity(name) {
         this.isMarried = true;
         return this;
     };
-
 }
 
-// В этом мире живут земли.
-// Возраст влияет на видимость.
-// Захваченная земля принадлежит карте. Это означает, что до земли можно добраться и собрать местные богатства.
+// Земли делят географию мира на части.
+// Все наземные жители и объекты стоят на землях.
 
 function WorldLand(dna) {
 
@@ -152,6 +148,7 @@ function WorldLand(dna) {
         return this;
     };
     this.Conquer = () => {
+        // До захваченной земли можно добраться и собирать местные богатства.
         this.map = true;
         return this;
     }
@@ -167,8 +164,11 @@ function WorldLand(dna) {
 
 }
 
-// На землях живут ресурсы.
-// Ресурсы производят работу, которую можно собирать.
+// Пищевая экосистема мира состоит из цепочки
+// ресурсы → работа → продукты
+
+// Ресурсы выращивают работу, которую можно забрать
+// Работа зависит от уровня ресурса.
 
 function WorldResource(dna) {
 
@@ -217,28 +217,30 @@ function WorldResource(dna) {
 
 }
 
-// Работа умеет производиться и выполнятся.
-// У работы есть цена для каждого шага в валюте DWSR (days/wifi/sheep/reserved).
-// Количество дней - это количество шагов до завершения.
-// По завершению работы появляется результат. Обычно это продукт для городского склада.
+// Работа выполнятся в городе и после завершения создаёт продукты.
 
 function WorldJob(dna) {
 
     // Описание работы
 
     this.name = dna && dna.name ? dna.name : 'prokastination';
-    this.cost = {
-        d: dna && dna.cost && dna.cost.d ? dna.cost.d : 1,
-        w: dna && dna.cost && dna.cost.w ? dna.cost.w : 0,
-        s: dna && dna.cost && dna.cost.s ? dna.cost.s : 0,
-        r: dna && dna.cost && dna.cost.r ? dna.cost.r : false,
-    }
     this.progress = 0;
     this.finish = dna && dna.finish ? dna.finish : () => false ;
     this.dna = dna;
-    
+
+    // Стоимость работы определяется в DWS
+    //      d: days_to_complete,
+    //      w: wifi_each_day,
+    //      s: sheep_workers_each_day
+
+    this.cost = {
+        d: dna && dna.cost && dna.cost.d ? dna.cost.d : 1,
+        w: dna && dna.cost && dna.cost.w ? dna.cost.w : 0,
+        s: dna && dna.cost && dna.cost.s ? dna.cost.s : 0
+    }
+
     // ------------ Services
-    
+
     this.ResetProgress = function() {
         this.progress = this.cost.d;
         return this;
@@ -266,7 +268,7 @@ function WorldJob(dna) {
         return this.progress > 0 ? this.progress*1 : 0 ;
     }
 
-    // ------------ Newborn job procedure
+    // ------------ Newborn job reflex
 
     this.ResetProgress();
     Radio.m('Got new job: '+this.name+'.'+this.Report());
@@ -281,17 +283,35 @@ let Geo = new PrinceOfGeography('Geo');
 let City = new PrincessOfCity('City');
 
 
-/* ****************************************************************************
-   Конец эпизода.
-   **************************************************************************** */
 </script>
 
+<!-- Конец эпизода. -->
 
-<script type="text/babel">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
 /* ****************************************************************************
    ЭПИЗОД II.
    Подготовка к коронации и церемония
    **************************************************************************** */
+   -->
+
+<script type="text/babel">
+
 Radio.chapter('Episode II');
 
 // Мистер Коронация описывает пошаговый регламент коронации.
@@ -318,7 +338,7 @@ World.mrCoronation = function() {
     return this;
 }
 
-// Мистер фагоцитоз во время коронации регистрирует принца и привязывает к королю.
+// Мистер Фагоцитоз во время коронации регистрирует принца и привязывает к королю.
 
 World.registered_kidnames = [];
 World.mrPhagocytosis = function(prince) {
@@ -328,8 +348,17 @@ World.mrPhagocytosis = function(prince) {
     return this;
 };
 
+// Старший принц подготавливает церемонию принятия хромосомы в мир
+
+Evolution.ApplyChromosome = function(chromosome) {
+    this.world.chromosome = chromosome;
+    this.world.name = chromosome.worldDNA.name;
+    this.world.age = chromosome.worldDNA.age;
+    return this;
+};
+
 // После коронации все принцы приглашаются на вечеринку.
-// После вечеринки мир готов к новым приключениям.
+// Цель вечеринки — хорошо отдохнуть, чтобы после завершения весь мир был готов к новым приключениям.
 
 World.mrWelcomeParty = function() {
     for ( let everyone in this.registered_kidnames )
@@ -338,8 +367,8 @@ World.mrWelcomeParty = function() {
     return this;
 };
 
-// Принцы подготавливаются к коронации.
-// Призывают собственных лордов и запускают сервисы для начала работы.
+// Принцы подготавливаются к вечеринке.
+// Призывают собственных лордов и подготавливаются к работе.
 
 Evolution.Welcome = function() {
     Radio.m('Welcome '+this.name+' the PrinceOfEvolution!');
@@ -354,14 +383,7 @@ City.Welcome = function() {
     return this;
 };
 
-// Старший принц подготавливает церемонию принятия хромосомы в коронованый мир
 
-Evolution.ApplyChromosome = function(chromosome) {
-    this.world.chromosome = chromosome;
-    this.world.name = chromosome.worldDNA.name;
-    this.world.age = chromosome.worldDNA.age;
-    return this;
-};
 
 
 // Церемония коронации
@@ -371,11 +393,22 @@ World
     .mrWelcomeParty()
     ;
 
-
-/* ****************************************************************************
-   Конец эпизода.
-   **************************************************************************** */
 </script>
+
+<!-- Конец эпизода. -->
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- Закрываются декорации мира. -->
 
