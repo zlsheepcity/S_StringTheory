@@ -79,7 +79,7 @@
 <!--
 /* ****************************************************************************
    ЭПИЗОД I.
-   Создание мира и рождение короля
+   Описание мира. Создание мира и рождение короля
    **************************************************************************** */
    -->
 
@@ -87,58 +87,19 @@
 
 Radio.chapter('Episode I');
 
-// В этом мире правит король
+// География мира
 
-function KingOfWorld(name) {
-    this.name = name; // имя - признак существования
-    this.age = 0;     // возраст - признак видимости, 0=невидимый
-};
-
-// В этом мире королю помогают принцы.
-// Их несколько, у каждого свои конкретные обязанности.
-
-// PrinceOfEvolution отвечает за процессы развития
-
-function PrinceOfEvolution(name) {
-    this.name = name;
-    this.age = 0;
-};
-
-// PrinceOfGeography хранит географическую информацию и превращает её в графическую.
-
-function PrinceOfGeography(name) {
-    this.name = name;
-    this.age = 0;
-};
-
-// PrincessOfCity - представитель юзера.
-// Город хранит богатства, контролирует производство и реализацию произведённого.
-
-function PrincessOfCity(name) {
-    this.name = name;
-    this.age = 0;
-    this.label = 'Index City'; // юмя принцессы для юзера
-
-    // Свадьба принцессы - это единение с юзером.
-    // Юзер принимает руководство над городом, выбирает новое имя.
-
-    this.Marriage = function(new_dna) {
-        this.label = new_dna.label;
-        this.isMarried = true;
-        return this;
-    };
-}
-
-// Земли делят географию мира на части.
+// Географические объёкты мира имеют графические свойства и отображаются на экране.
+// Главный континент разделён на земли — Lands.
 // Все наземные жители и объекты стоят на землях.
 
 function WorldLand(dna) {
 
     // Описание земли
 
-    this.name = dna && dna.name ? dna.name : 'wild_desert' ;
-    this.age = dna && dna.age ? dna.age : 0 ;
-    this.map = dna && dna.map ? dna.map : false ;
+    this.name = dna && dna.name ? dna.name : 'wild_desert' ; // имя - признак существования
+    this.age = dna && dna.age ? dna.age : 0 ; // возраст - признак видимости, 0=невидимый
+    this.map = dna && dna.map ? dna.map : false ; // привязанный к карте — подчиняется карте
 
     // ------------ Actions
 
@@ -148,7 +109,7 @@ function WorldLand(dna) {
         return this;
     };
     this.Conquer = () => {
-        // До захваченной земли можно добраться и собирать местные богатства.
+        // До захваченной земли можно добраться и собирать местные ресурсы.
         this.map = true;
         return this;
     }
@@ -164,20 +125,23 @@ function WorldLand(dna) {
 
 }
 
-// Пищевая экосистема мира состоит из цепочки
-// ресурсы → работа → продукты
+// Пищевая экосистема мира
 
-// Ресурсы выращивают работу, которую можно забрать
-// Работа зависит от уровня ресурса.
+// ресурс  → добывает работу
+// работа → выполняется и создаёт продукт
+// продукт → используется или обменивается
+
+// Ресурсы привязаны к землям. Добывают из земли минералы и превращают минералы в работу, которую можно забрать. Уровень ресурса влияет на добычу.
 
 function WorldResource(dna) {
 
     // Описание ресурса
 
     this.name           = dna && dna.name ? dna.name : 'dreams' ;
-    this.lvl            = dna && dna.lvl ? dna.lvl : 0 ;
     this.homeland       = dna && dna.homeland ? dna.homeland : this.name ;
-    this.production     = dna && dna.production ? dna.production : [] ;
+    this.lvl            = dna && dna.lvl ? dna.lvl : 0 ;
+    this.minerals       = dna && dna.minerals ? dna.minerals : [] ;
+    this.joblist        = [];
 
     // ------------ Actions
 
@@ -193,8 +157,12 @@ function WorldResource(dna) {
         return this;
     };
     this.Grab = function() {
-        if (this.isWild()) return false;
-        return this.generateJoblist();
+        this.joblist = [];
+        if ( ! this.isWild() )
+            for ( let everything_you_can_grab in this.minerals )
+                if ( this.verifyJob(this.minerals[everything_you_can_grab]) )
+                    this.joblist.push(this.minerals[everything_you_can_grab].job);
+        return this.joblist;
     };
 
     // ------------ Services
@@ -206,14 +174,6 @@ function WorldResource(dna) {
         if ( job.max_lvl && job.max_lvl<this.lvl ) return false;
         return true;
     }
-    this.generateJoblist = function() {
-        const production = this.production;
-        let joblist = [];
-        for ( let everyone in production )
-            if ( this.verifyJob(production[everyone]) )
-                joblist.push(production[everyone].job);
-        return joblist.length ? joblist : false ;
-    };
 
 }
 
@@ -273,6 +233,56 @@ function WorldJob(dna) {
     this.ResetProgress();
     Radio.m('Got new job: '+this.name+'.'+this.Report());
 }
+
+
+
+
+// В этом мире правит король
+
+function KingOfWorld(name) {
+    this.name = name; // имя - признак существования
+    this.age = 0;     // возраст - признак видимости, 0=невидимый
+};
+
+// В этом мире королю помогают принцы.
+// Их несколько, у каждого свои конкретные обязанности.
+
+// PrinceOfEvolution отвечает за процессы развития
+
+function PrinceOfEvolution(name) {
+    this.name = name;
+    this.age = 0;
+};
+
+// PrinceOfGeography хранит географическую информацию и превращает её в графическую.
+
+function PrinceOfGeography(name) {
+    this.name = name;
+    this.age = 0;
+};
+
+// PrincessOfCity - представитель юзера.
+// Город хранит богатства, контролирует производство и реализацию произведённого.
+
+function PrincessOfCity(name) {
+    this.name = name;
+    this.age = 0;
+    this.label = 'Index City'; // юмя принцессы для юзера
+
+    // Свадьба принцессы - это единение с юзером.
+    // Юзер принимает руководство над городом, выбирает новое имя.
+
+    this.Marriage = function(new_dna) {
+        this.label = new_dna.label;
+        this.isMarried = true;
+        return this;
+    };
+}
+
+// Земли делят географию мира на части.
+
+// Пищевая экосистема мира 
+
 
 
 // Рождение короля и принцев
